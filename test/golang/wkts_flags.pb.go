@@ -277,135 +277,135 @@ func AddSetFlagsForMessageWithWKTs(flags *pflag.FlagSet, prefix string, hidden b
 
 // SetFromFlags sets the MessageWithWKTs message from flags.
 func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("double_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("double_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.DoubleValue = &wrapperspb.DoubleValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("double_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetFloat64Slice(flags, flagsplugin.Prefix("double_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64Slice(flags, flagsplugin.Prefix("double_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.DoubleValue{Value: value}
 			m.DoubleValues = append(m.DoubleValues, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("double_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("float_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("float_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.FloatValue = &wrapperspb.FloatValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("float_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetFloat32Slice(flags, flagsplugin.Prefix("float_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32Slice(flags, flagsplugin.Prefix("float_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.FloatValue{Value: value}
 			m.FloatValues = append(m.FloatValues, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("float_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("int32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("int32_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Int32Value = &wrapperspb.Int32Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("int32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("int32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("int32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.Int32Value{Value: value}
 			m.Int32Values = append(m.Int32Values, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("int32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("int64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("int64_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Int64Value = &wrapperspb.Int64Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("int64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("int64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("int64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.Int64Value{Value: value}
 			m.Int64Values = append(m.Int64Values, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("int64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("uint32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("uint32_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Uint32Value = &wrapperspb.UInt32Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("uint32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("uint32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("uint32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.UInt32Value{Value: value}
 			m.Uint32Values = append(m.Uint32Values, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("uint32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("uint64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("uint64_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Uint64Value = &wrapperspb.UInt64Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("uint64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("uint64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("uint64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.UInt64Value{Value: value}
 			m.Uint64Values = append(m.Uint64Values, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("uint64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.BoolValue = &wrapperspb.BoolValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("bool_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBoolSlice(flags, flagsplugin.Prefix("bool_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBoolSlice(flags, flagsplugin.Prefix("bool_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.BoolValue{Value: value}
 			m.BoolValues = append(m.BoolValues, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("bool_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringValue = &wrapperspb.StringValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("string_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("string_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("string_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.StringValue{Value: value}
 			m.StringValues = append(m.StringValues, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("string_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("bytes_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("bytes_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.BytesValue = &wrapperspb.BytesValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("bytes_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("bytes_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("bytes_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := &wrapperspb.BytesValue{Value: value}
 			m.BytesValues = append(m.BytesValues, v)
@@ -414,39 +414,39 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	}
 	// FIXME: Skipping EmptyValue because this WKT is not supported.
 	// FIXME: Skipping EmptyValues because this repeated WKT is not supported
-	if val, selected, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("timestamp_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("timestamp_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.TimestampValue = golang.SetTimestamp(val)
 		paths = append(paths, flagsplugin.Prefix("timestamp_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetTimestampSlice(flags, flagsplugin.Prefix("timestamp_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetTimestampSlice(flags, flagsplugin.Prefix("timestamp_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := golang.SetTimestamp(value)
 			m.TimestampValues = append(m.TimestampValues, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("timestamp_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("duration_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("duration_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.DurationValue = golang.SetDuration(val)
 		paths = append(paths, flagsplugin.Prefix("duration_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetDurationSlice(flags, flagsplugin.Prefix("duration_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetDurationSlice(flags, flagsplugin.Prefix("duration_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			v := golang.SetDuration(value)
 			m.DurationValues = append(m.DurationValues, v)
 		}
 		paths = append(paths, flagsplugin.Prefix("duration_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("field_mask_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("field_mask_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.FieldMaskValue = golang.SetFieldMask(val)
 		paths = append(paths, flagsplugin.Prefix("field_mask_value", prefix))
 	}
@@ -605,98 +605,98 @@ func AddSetFlagsForMessageWithOneofWKTs(flags *pflag.FlagSet, prefix string, hid
 
 // SetFromFlags sets the MessageWithOneofWKTs message from flags.
 func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("value.double_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("value.double_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_DoubleValue{}
 		ov.DoubleValue = &wrapperspb.DoubleValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.double_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("value.float_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("value.float_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_FloatValue{}
 		ov.FloatValue = &wrapperspb.FloatValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.float_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.int32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.int32_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_Int32Value{}
 		ov.Int32Value = &wrapperspb.Int32Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.int32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.int64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.int64_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_Int64Value{}
 		ov.Int64Value = &wrapperspb.Int64Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.int64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.uint32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.uint32_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_Uint32Value{}
 		ov.Uint32Value = &wrapperspb.UInt32Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.uint32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.uint64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.uint64_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_Uint64Value{}
 		ov.Uint64Value = &wrapperspb.UInt64Value{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.uint64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("value.bool_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("value.bool_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_BoolValue{}
 		ov.BoolValue = &wrapperspb.BoolValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.bool_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.string_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.string_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_StringValue{}
 		ov.StringValue = &wrapperspb.StringValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.string_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.bytes_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.bytes_value.value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_BytesValue{}
 		ov.BytesValue = &wrapperspb.BytesValue{Value: val}
 		paths = append(paths, flagsplugin.Prefix("value.bytes_value", prefix))
 		m.Value = ov
 	}
 	// FIXME: Skipping EmptyValue because this WKT is not supported.
-	if val, selected, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("value.timestamp_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("value.timestamp_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_TimestampValue{}
 		ov.TimestampValue = golang.SetTimestamp(val)
 		paths = append(paths, flagsplugin.Prefix("value.timestamp_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("value.duration_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("value.duration_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_DurationValue{}
 		ov.DurationValue = golang.SetDuration(val)
 		paths = append(paths, flagsplugin.Prefix("value.duration_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("value.field_mask_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("value.field_mask_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofWKTs_FieldMaskValue{}
 		ov.FieldMaskValue = golang.SetFieldMask(val)
 		paths = append(paths, flagsplugin.Prefix("value.field_mask_value", prefix))
@@ -843,81 +843,81 @@ func AddSetFlagsForMessageWithWKTMaps(flags *pflag.FlagSet, prefix string, hidde
 
 // SetFromFlags sets the MessageWithWKTMaps message from flags.
 func (m *MessageWithWKTMaps) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetStringFloat64Map(flags, flagsplugin.Prefix("string_double_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringFloat64Map(flags, flagsplugin.Prefix("string_double_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringDoubleMap = make(map[string]*wrapperspb.DoubleValue)
 		for key, value := range val {
 			m.StringDoubleMap[key] = &wrapperspb.DoubleValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_double_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringFloat32Map(flags, flagsplugin.Prefix("string_float_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringFloat32Map(flags, flagsplugin.Prefix("string_float_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringFloatMap = make(map[string]*wrapperspb.FloatValue)
 		for key, value := range val {
 			m.StringFloatMap[key] = &wrapperspb.FloatValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_float_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_int32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_int32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringInt32Map = make(map[string]*wrapperspb.Int32Value)
 		for key, value := range val {
 			m.StringInt32Map[key] = &wrapperspb.Int32Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_int32_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_int64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_int64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringInt64Map = make(map[string]*wrapperspb.Int64Value)
 		for key, value := range val {
 			m.StringInt64Map[key] = &wrapperspb.Int64Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_int64_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringUint32Map(flags, flagsplugin.Prefix("string_uint32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringUint32Map(flags, flagsplugin.Prefix("string_uint32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringUint32Map = make(map[string]*wrapperspb.UInt32Value)
 		for key, value := range val {
 			m.StringUint32Map[key] = &wrapperspb.UInt32Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_uint32_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringUint64Map(flags, flagsplugin.Prefix("string_uint64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringUint64Map(flags, flagsplugin.Prefix("string_uint64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringUint64Map = make(map[string]*wrapperspb.UInt64Value)
 		for key, value := range val {
 			m.StringUint64Map[key] = &wrapperspb.UInt64Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_uint64_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringBoolMap(flags, flagsplugin.Prefix("string_bool_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringBoolMap(flags, flagsplugin.Prefix("string_bool_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringBoolMap = make(map[string]*wrapperspb.BoolValue)
 		for key, value := range val {
 			m.StringBoolMap[key] = &wrapperspb.BoolValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_bool_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringStringMap(flags, flagsplugin.Prefix("string_string_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringStringMap(flags, flagsplugin.Prefix("string_string_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringStringMap = make(map[string]*wrapperspb.StringValue)
 		for key, value := range val {
 			m.StringStringMap[key] = &wrapperspb.StringValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_string_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringBytesMap(flags, flagsplugin.Prefix("string_bytes_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringBytesMap(flags, flagsplugin.Prefix("string_bytes_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringBytesMap = make(map[string]*wrapperspb.BytesValue)
 		for key, value := range val {
 			m.StringBytesMap[key] = &wrapperspb.BytesValue{Value: value}
@@ -925,18 +925,18 @@ func (m *MessageWithWKTMaps) SetFromFlags(flags *pflag.FlagSet, prefix string) (
 		paths = append(paths, flagsplugin.Prefix("string_bytes_map", prefix))
 	}
 	// FIXME: Skipping StringEmptyMap because maps with message value types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringTimestampMap(flags, flagsplugin.Prefix("string_timestamp_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringTimestampMap(flags, flagsplugin.Prefix("string_timestamp_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringTimestampMap = make(map[string]*timestamppb.Timestamp)
 		for key, value := range val {
 			m.StringTimestampMap[key] = golang.SetTimestamp(value)
 		}
 		paths = append(paths, flagsplugin.Prefix("string_timestamp_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringDurationMap(flags, flagsplugin.Prefix("string_duration_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringDurationMap(flags, flagsplugin.Prefix("string_duration_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringDurationMap = make(map[string]*durationpb.Duration)
 		for key, value := range val {
 			m.StringDurationMap[key] = golang.SetDuration(value)

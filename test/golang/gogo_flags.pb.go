@@ -84,51 +84,51 @@ func AddSetFlagsForMessageWithGoGoOptions(flags *pflag.FlagSet, prefix string, h
 
 // SetFromFlags sets the MessageWithGoGoOptions message from flags.
 func (m *MessageWithGoGoOptions) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("eui_with_custom_name", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("eui_with_custom_name", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.EuiWithCustomName = val
 		paths = append(paths, flagsplugin.Prefix("eui_with_custom_name", prefix))
 	}
-	if val, selected, err := types.GetExactBytes(flags, flagsplugin.Prefix("eui_with_custom_name_and_type", prefix)); err != nil {
+	if val, changed, err := types.GetExactBytes(flags, flagsplugin.Prefix("eui_with_custom_name_and_type", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.EuiWithCustomNameAndType = val
 		paths = append(paths, flagsplugin.Prefix("eui_with_custom_name_and_type", prefix))
 	}
-	if val, selected, err := types.GetExactBytes(flags, flagsplugin.Prefix("non_nullable_eui_with_custom_name_and_type", prefix)); err != nil {
+	if val, changed, err := types.GetExactBytes(flags, flagsplugin.Prefix("non_nullable_eui_with_custom_name_and_type", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.NonNullableEuiWithCustomNameAndType = val
 		paths = append(paths, flagsplugin.Prefix("non_nullable_eui_with_custom_name_and_type", prefix))
 	}
-	if val, selected, err := types.GetExactBytesSlice(flags, flagsplugin.Prefix("euis_with_custom_name_and_type", prefix)); err != nil {
+	if val, changed, err := types.GetExactBytesSlice(flags, flagsplugin.Prefix("euis_with_custom_name_and_type", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.EuisWithCustomNameAndType = val
 		paths = append(paths, flagsplugin.Prefix("euis_with_custom_name_and_type", prefix))
 	}
-	if val, selected, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("duration", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("duration", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Duration = golang.SetDuration(val)
 		paths = append(paths, flagsplugin.Prefix("duration", prefix))
 	}
-	if val, selected, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("non_nullable_duration", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetDuration(flags, flagsplugin.Prefix("non_nullable_duration", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.NonNullableDuration = golang.SetDuration(val)
 		paths = append(paths, flagsplugin.Prefix("non_nullable_duration", prefix))
 	}
-	if val, selected, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("timestamp", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("timestamp", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Timestamp = golang.SetTimestamp(val)
 		paths = append(paths, flagsplugin.Prefix("timestamp", prefix))
 	}
-	if val, selected, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("non_nullable_timestamp", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetTimestamp(flags, flagsplugin.Prefix("non_nullable_timestamp", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.NonNullableTimestamp = golang.SetTimestamp(val)
 		paths = append(paths, flagsplugin.Prefix("non_nullable_timestamp", prefix))
 	}
@@ -157,9 +157,9 @@ func AddSetFlagsForSubMessage(flags *pflag.FlagSet, prefix string, hidden bool) 
 
 // SetFromFlags sets the SubMessage message from flags.
 func (m *SubMessage) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("field", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("field", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Field = val
 		paths = append(paths, flagsplugin.Prefix("field", prefix))
 	}
@@ -188,9 +188,9 @@ func AddSetFlagsForSubMessageWithoutMarshalers(flags *pflag.FlagSet, prefix stri
 
 // SetFromFlags sets the SubMessageWithoutMarshalers message from flags.
 func (m *SubMessageWithoutMarshalers) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("other_field", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("other_field", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.OtherField = val
 		paths = append(paths, flagsplugin.Prefix("other_field", prefix))
 	}
@@ -252,7 +252,7 @@ func AddSetFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix string, hidd
 
 // SetFromFlags sets the MessageWithNullable message from flags.
 func (m *MessageWithNullable) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
 		m.Sub = &SubMessage{}
 		if setPaths, err := m.Sub.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
@@ -261,7 +261,7 @@ func (m *MessageWithNullable) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 		}
 	}
 	// FIXME: Skipping Subs because it does not seem to implement AddSetFlags.
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
 		m.OtherSub = &SubMessageWithoutMarshalers{}
 		if setPaths, err := m.OtherSub.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err
@@ -314,7 +314,7 @@ func AddSetFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string, hidd
 
 // SetFromFlags sets the MessageWithEmbedded message from flags.
 func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
 		m.Sub = &SubMessage{}
 		if setPaths, err := m.Sub.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
@@ -322,7 +322,7 @@ func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 			paths = append(paths, setPaths...)
 		}
 	}
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
 		m.OtherSub = &SubMessageWithoutMarshalers{}
 		if setPaths, err := m.OtherSub.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err
@@ -374,7 +374,7 @@ func AddSetFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, prefix stri
 
 // SetFromFlags sets the MessageWithNullableEmbedded message from flags.
 func (m *MessageWithNullableEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
 		m.Sub = &SubMessage{}
 		if setPaths, err := m.Sub.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
@@ -382,7 +382,7 @@ func (m *MessageWithNullableEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix 
 			paths = append(paths, setPaths...)
 		}
 	}
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
 		m.OtherSub = &SubMessageWithoutMarshalers{}
 		if setPaths, err := m.OtherSub.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err

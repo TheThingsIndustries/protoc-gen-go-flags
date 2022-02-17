@@ -250,195 +250,195 @@ func AddSetFlagsForMessageWithScalars(flags *pflag.FlagSet, prefix string, hidde
 
 // SetFromFlags sets the MessageWithScalars message from flags.
 func (m *MessageWithScalars) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("double_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("double_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.DoubleValue = val
 		paths = append(paths, flagsplugin.Prefix("double_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetFloat64Slice(flags, flagsplugin.Prefix("double_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64Slice(flags, flagsplugin.Prefix("double_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.DoubleValues = val
 		paths = append(paths, flagsplugin.Prefix("double_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("float_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("float_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.FloatValue = val
 		paths = append(paths, flagsplugin.Prefix("float_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetFloat32Slice(flags, flagsplugin.Prefix("float_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32Slice(flags, flagsplugin.Prefix("float_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.FloatValues = val
 		paths = append(paths, flagsplugin.Prefix("float_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("int32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("int32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Int32Value = val
 		paths = append(paths, flagsplugin.Prefix("int32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("int32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("int32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Int32Values = val
 		paths = append(paths, flagsplugin.Prefix("int32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("int64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("int64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Int64Value = val
 		paths = append(paths, flagsplugin.Prefix("int64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("int64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("int64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Int64Values = val
 		paths = append(paths, flagsplugin.Prefix("int64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("uint32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("uint32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Uint32Value = val
 		paths = append(paths, flagsplugin.Prefix("uint32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("uint32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("uint32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Uint32Values = val
 		paths = append(paths, flagsplugin.Prefix("uint32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("uint64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("uint64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Uint64Value = val
 		paths = append(paths, flagsplugin.Prefix("uint64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("uint64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("uint64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Uint64Values = val
 		paths = append(paths, flagsplugin.Prefix("uint64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("sint32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("sint32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sint32Value = val
 		paths = append(paths, flagsplugin.Prefix("sint32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("sint32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("sint32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sint32Values = val
 		paths = append(paths, flagsplugin.Prefix("sint32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("sint64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("sint64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sint64Value = val
 		paths = append(paths, flagsplugin.Prefix("sint64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("sint64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("sint64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sint64Values = val
 		paths = append(paths, flagsplugin.Prefix("sint64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("fixed32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("fixed32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Fixed32Value = val
 		paths = append(paths, flagsplugin.Prefix("fixed32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("fixed32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("fixed32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Fixed32Values = val
 		paths = append(paths, flagsplugin.Prefix("fixed32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("fixed64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("fixed64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Fixed64Value = val
 		paths = append(paths, flagsplugin.Prefix("fixed64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("fixed64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("fixed64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Fixed64Values = val
 		paths = append(paths, flagsplugin.Prefix("fixed64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("sfixed32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("sfixed32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sfixed32Value = val
 		paths = append(paths, flagsplugin.Prefix("sfixed32_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("sfixed32_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("sfixed32_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sfixed32Values = val
 		paths = append(paths, flagsplugin.Prefix("sfixed32_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("sfixed64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("sfixed64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sfixed64Value = val
 		paths = append(paths, flagsplugin.Prefix("sfixed64_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("sfixed64_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("sfixed64_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.Sfixed64Values = val
 		paths = append(paths, flagsplugin.Prefix("sfixed64_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.BoolValue = val
 		paths = append(paths, flagsplugin.Prefix("bool_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBoolSlice(flags, flagsplugin.Prefix("bool_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBoolSlice(flags, flagsplugin.Prefix("bool_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.BoolValues = val
 		paths = append(paths, flagsplugin.Prefix("bool_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringValue = val
 		paths = append(paths, flagsplugin.Prefix("string_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("string_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("string_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringValues = val
 		paths = append(paths, flagsplugin.Prefix("string_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("bytes_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("bytes_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.BytesValue = val
 		paths = append(paths, flagsplugin.Prefix("bytes_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("bytes_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("bytes_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.BytesValues = val
 		paths = append(paths, flagsplugin.Prefix("bytes_values", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("hex_bytes_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("hex_bytes_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.HexBytesValue = val
 		paths = append(paths, flagsplugin.Prefix("hex_bytes_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("hex_bytes_values", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("hex_bytes_values", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.HexBytesValues = val
 		paths = append(paths, flagsplugin.Prefix("hex_bytes_values", prefix))
 	}
@@ -572,129 +572,129 @@ func AddSetFlagsForMessageWithOneofScalars(flags *pflag.FlagSet, prefix string, 
 
 // SetFromFlags sets the MessageWithOneofScalars message from flags.
 func (m *MessageWithOneofScalars) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("value.double_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("value.double_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_DoubleValue{}
 		ov.DoubleValue = val
 		paths = append(paths, flagsplugin.Prefix("value.double_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("value.float_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("value.float_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_FloatValue{}
 		ov.FloatValue = val
 		paths = append(paths, flagsplugin.Prefix("value.float_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.int32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.int32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Int32Value{}
 		ov.Int32Value = val
 		paths = append(paths, flagsplugin.Prefix("value.int32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.int64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.int64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Int64Value{}
 		ov.Int64Value = val
 		paths = append(paths, flagsplugin.Prefix("value.int64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.uint32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.uint32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Uint32Value{}
 		ov.Uint32Value = val
 		paths = append(paths, flagsplugin.Prefix("value.uint32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.uint64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.uint64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Uint64Value{}
 		ov.Uint64Value = val
 		paths = append(paths, flagsplugin.Prefix("value.uint64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.sint32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.sint32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Sint32Value{}
 		ov.Sint32Value = val
 		paths = append(paths, flagsplugin.Prefix("value.sint32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.sint64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.sint64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Sint64Value{}
 		ov.Sint64Value = val
 		paths = append(paths, flagsplugin.Prefix("value.sint64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.fixed32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.fixed32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Fixed32Value{}
 		ov.Fixed32Value = val
 		paths = append(paths, flagsplugin.Prefix("value.fixed32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.fixed64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.fixed64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Fixed64Value{}
 		ov.Fixed64Value = val
 		paths = append(paths, flagsplugin.Prefix("value.fixed64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.sfixed32_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.sfixed32_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Sfixed32Value{}
 		ov.Sfixed32Value = val
 		paths = append(paths, flagsplugin.Prefix("value.sfixed32_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.sfixed64_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.sfixed64_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_Sfixed64Value{}
 		ov.Sfixed64Value = val
 		paths = append(paths, flagsplugin.Prefix("value.sfixed64_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("value.bool_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("value.bool_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_BoolValue{}
 		ov.BoolValue = val
 		paths = append(paths, flagsplugin.Prefix("value.bool_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.string_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.string_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_StringValue{}
 		ov.StringValue = val
 		paths = append(paths, flagsplugin.Prefix("value.string_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.bytes_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.bytes_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_BytesValue{}
 		ov.BytesValue = val
 		paths = append(paths, flagsplugin.Prefix("value.bytes_value", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.hex_bytes_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.hex_bytes_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofScalars_HexBytesValue{}
 		ov.HexBytesValue = val
 		paths = append(paths, flagsplugin.Prefix("value.hex_bytes_value", prefix))
@@ -900,104 +900,104 @@ func AddSetFlagsForMessageWithScalarMaps(flags *pflag.FlagSet, prefix string, hi
 
 // SetFromFlags sets the MessageWithScalarMaps message from flags.
 func (m *MessageWithScalarMaps) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetStringFloat64Map(flags, flagsplugin.Prefix("string_double_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringFloat64Map(flags, flagsplugin.Prefix("string_double_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringDoubleMap = val
 		paths = append(paths, flagsplugin.Prefix("string_double_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringFloat32Map(flags, flagsplugin.Prefix("string_float_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringFloat32Map(flags, flagsplugin.Prefix("string_float_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringFloatMap = val
 		paths = append(paths, flagsplugin.Prefix("string_float_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_int32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_int32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringInt32Map = val
 		paths = append(paths, flagsplugin.Prefix("string_int32_map", prefix))
 	}
 	// FIXME: Skipping Int32StringMap because maps with int32 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_int64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_int64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringInt64Map = val
 		paths = append(paths, flagsplugin.Prefix("string_int64_map", prefix))
 	}
 	// FIXME: Skipping Int64StringMap because maps with int64 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringUint32Map(flags, flagsplugin.Prefix("string_uint32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringUint32Map(flags, flagsplugin.Prefix("string_uint32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringUint32Map = val
 		paths = append(paths, flagsplugin.Prefix("string_uint32_map", prefix))
 	}
 	// FIXME: Skipping Uint32StringMap because maps with uint32 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringUint64Map(flags, flagsplugin.Prefix("string_uint64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringUint64Map(flags, flagsplugin.Prefix("string_uint64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringUint64Map = val
 		paths = append(paths, flagsplugin.Prefix("string_uint64_map", prefix))
 	}
 	// FIXME: Skipping Uint64StringMap because maps with uint64 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_sint32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_sint32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringSint32Map = val
 		paths = append(paths, flagsplugin.Prefix("string_sint32_map", prefix))
 	}
 	// FIXME: Skipping Sint32StringMap because maps with sint32 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_sint64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_sint64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringSint64Map = val
 		paths = append(paths, flagsplugin.Prefix("string_sint64_map", prefix))
 	}
 	// FIXME: Skipping Sint64StringMap because maps with sint64 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringUint32Map(flags, flagsplugin.Prefix("string_fixed32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringUint32Map(flags, flagsplugin.Prefix("string_fixed32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringFixed32Map = val
 		paths = append(paths, flagsplugin.Prefix("string_fixed32_map", prefix))
 	}
 	// FIXME: Skipping Fixed32StringMap because maps with fixed32 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringUint64Map(flags, flagsplugin.Prefix("string_fixed64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringUint64Map(flags, flagsplugin.Prefix("string_fixed64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringFixed64Map = val
 		paths = append(paths, flagsplugin.Prefix("string_fixed64_map", prefix))
 	}
 	// FIXME: Skipping Fixed64StringMap because maps with fixed64 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_sfixed32_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt32Map(flags, flagsplugin.Prefix("string_sfixed32_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringSfixed32Map = val
 		paths = append(paths, flagsplugin.Prefix("string_sfixed32_map", prefix))
 	}
 	// FIXME: Skipping Sfixed32StringMap because maps with sfixed32 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_sfixed64_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringInt64Map(flags, flagsplugin.Prefix("string_sfixed64_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringSfixed64Map = val
 		paths = append(paths, flagsplugin.Prefix("string_sfixed64_map", prefix))
 	}
 	// FIXME: Skipping Sfixed64StringMap because maps with sfixed64 key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringBoolMap(flags, flagsplugin.Prefix("string_bool_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringBoolMap(flags, flagsplugin.Prefix("string_bool_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringBoolMap = val
 		paths = append(paths, flagsplugin.Prefix("string_bool_map", prefix))
 	}
 	// FIXME: Skipping BoolStringMap because maps with bool key types are currently not supported.
-	if val, selected, err := flagsplugin.GetStringStringMap(flags, flagsplugin.Prefix("string_string_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringStringMap(flags, flagsplugin.Prefix("string_string_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringStringMap = val
 		paths = append(paths, flagsplugin.Prefix("string_string_map", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringBytesMap(flags, flagsplugin.Prefix("string_bytes_map", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringBytesMap(flags, flagsplugin.Prefix("string_bytes_map", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringBytesMap = val
 		paths = append(paths, flagsplugin.Prefix("string_bytes_map", prefix))
 	}

@@ -213,9 +213,9 @@ nextField:
 		if field.Desc.IsMap() {
 			// If custom getter is set for the field, use it to retrieve the flag value.
 			if customGetter != nil {
-				g.P("if val, selected, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+				g.P("if val, changed, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 				g.P("return nil, err")
-				g.P("} else if ", "selected", "{")
+				g.P("} else if ", "changed", "{")
 				g.P("m", ".", fieldGoName, " =  val")
 				// If flag is set, append the path to the paths to be returned.
 				g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
@@ -239,9 +239,9 @@ nextField:
 			}
 			switch value.Desc.Kind() {
 			default:
-				g.P("if val, selected, err := ", flagspluginPackage.Ident("GetString"+g.libNameForField(value)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+				g.P("if val, changed, err := ", flagspluginPackage.Ident("GetString"+g.libNameForField(value)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 				g.P("return nil, err")
-				g.P("} else if ", "selected", "{")
+				g.P("} else if ", "changed", "{")
 				g.P("m", ".", fieldGoName, " = val")
 				g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 				g.P("}")
@@ -254,9 +254,9 @@ nextField:
 						g.P("// FIXME: Skipping ", field.GoName, " because maps with enum value types are currently not supported.")
 						continue nextField
 					}
-					g.P("if val, selected, err := ", flagspluginPackage.Ident("GetString"+g.libNameForField(wrappedField)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+					g.P("if val, changed, err := ", flagspluginPackage.Ident("GetString"+g.libNameForField(wrappedField)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
-					g.P("} else if selected", "{")
+					g.P("} else if changed", "{")
 					// If nullable is false, create a map without a pointer value.
 					g.P("m.", fieldGoName, " = make(map[", g.goTypeForField(key), "]", ifThenElse(fieldIsNullable(value), "*", ""), g.goTypeForField(value), ")")
 					g.P("for key, value := range val {")
@@ -266,9 +266,9 @@ nextField:
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
 				case isSupportedWKTSliceOrMap(value.Message):
-					g.P("if val, selected, err := ", flagspluginPackage.Ident("GetString"+g.libNameForWKT(value.Message)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+					g.P("if val, changed, err := ", flagspluginPackage.Ident("GetString"+g.libNameForWKT(value.Message)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
-					g.P("} else if selected", "{")
+					g.P("} else if changed", "{")
 					g.P("m.", fieldGoName, " = make(map[", g.goTypeForField(key), "]", ifThenElse(fieldIsNullable(value), "*", ""), g.goTypeForField(value), ")")
 					g.P("for key, value := range val {")
 					// If value is not a wrapper, but a supported WKT, convert the value to the proto type.
@@ -288,9 +288,9 @@ nextField:
 		if field.Desc.IsList() {
 			// If custom getter is set for the field, use it to retrieve the flag value.
 			if customGetter != nil {
-				g.P("if val, selected, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+				g.P("if val, changed, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 				g.P("return nil, err")
-				g.P("} else if selected", "{")
+				g.P("} else if changed", "{")
 				g.P("m", ".", fieldGoName, " = val")
 				g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 				g.P("}")
@@ -305,9 +305,9 @@ nextField:
 			switch field.Desc.Kind() {
 			default:
 				// When getting slice flags, append `Slice` to the go flag getter.
-				g.P("if val, selected, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(field)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+				g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(field)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 				g.P("return nil, err")
-				g.P("} else if selected", "{")
+				g.P("} else if changed", "{")
 				if field.Desc.Kind() == protoreflect.EnumKind {
 					g.P("for _, v := range val {")
 					// If field is enum slice, we first obtain the string representation for every value,
@@ -328,9 +328,9 @@ nextField:
 				case messageIsWrapper(field.Message):
 					// If message is a wrapper, we consider the underlying wrapped field type.
 					wrappedField := field.Message.Fields[0]
-					g.P("if val, selected, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(wrappedField)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(wrappedField)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
-					g.P("} else if selected", "{")
+					g.P("} else if changed", "{")
 					g.P("for _, value := range val {")
 					if wrappedField.Desc.Kind() == protoreflect.EnumKind {
 						// If field is enum slice, we first obtain the string representation for every value,
@@ -354,9 +354,9 @@ nextField:
 						g.P("// FIXME: Skipping ", field.GoName, " because this repeated WKT is not supported")
 						continue nextField
 					}
-					g.P("if val, selected, err := ", flagspluginPackage.Ident("Get"+g.libNameForWKT(field.Message)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForWKT(field.Message)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
-					g.P("} else if selected", "{")
+					g.P("} else if changed", "{")
 					g.P("for _, value := range val {")
 					// For every WKT value in WKT slice we convert it to the timestamp proto type.
 					g.P("v := ", g.readWKTValue(field, field.Message, "value"))
@@ -380,9 +380,9 @@ nextField:
 		}
 		// If custom getter is set for the field, use it to retrieve the flag value.
 		if customGetter != nil {
-			g.P("if val, selected, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+			g.P("if val, changed, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 			g.P("return nil, err")
-			g.P("} else if selected", "{")
+			g.P("} else if changed", "{")
 			if field.Oneof != nil {
 				// If field is in a oneof, initialize an appropriate proto oneof type.
 				g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
@@ -401,9 +401,9 @@ nextField:
 		} else {
 			switch field.Desc.Kind() {
 			default:
-				g.P("if val, selected, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(field)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+				g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(field)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 				g.P("return nil, err")
-				g.P("} else if selected", "{")
+				g.P("} else if changed", "{")
 				// If field is in a oneof, initialize an appropriate proto oneof type.
 				if field.Oneof != nil {
 					g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
@@ -428,7 +428,7 @@ nextField:
 				switch {
 				case g.messageHasSetFlags(field.Message):
 					// If field message has flag setter, we first check if any flags for the message are set.
-					g.P("if selected := ", flagspluginPackage.Ident("IsAnyPrefixSet(flags, "), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); selected {`)
+					g.P("if changed := ", flagspluginPackage.Ident("IsAnyPrefixSet(flags, "), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); changed {`)
 					if field.Oneof != nil {
 						g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
 					}
@@ -443,9 +443,9 @@ nextField:
 					g.P("}")
 				case messageIsWrapper(field.Message):
 					// If the message is wrapper we get value directly from the {fieldName}.value flag.
-					g.P("if val, selected, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(fieldName)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix)); err != nil {`)
+					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(fieldName)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix)); err != nil {`)
 					g.P("return nil, err")
-					g.P("} else if selected", "{")
+					g.P("} else if changed", "{")
 					if field.Oneof != nil {
 						g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
 					}
@@ -458,9 +458,9 @@ nextField:
 						g.P("// FIXME: Skipping ", field.GoName, " because this WKT is not supported.")
 						continue nextField
 					}
-					g.P("if val, selected, err := ", flagspluginPackage.Ident("Get"+g.libNameForWKT(fieldName.Message)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForWKT(fieldName.Message)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
-					g.P("} else if selected", "{")
+					g.P("} else if changed", "{")
 					if field.Oneof != nil {
 						g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
 					}

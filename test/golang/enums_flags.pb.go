@@ -33,9 +33,9 @@ func AddSetFlagsForCustomEnumValue(flags *pflag.FlagSet, prefix string, hidden b
 
 // SetFromFlags sets the CustomEnumValue message from flags.
 func (m *CustomEnumValue) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value)
 		if err != nil {
 			return nil, err
@@ -110,9 +110,9 @@ func AddSetFlagsForMessageWithEnums(flags *pflag.FlagSet, prefix string, hidden 
 
 // SetFromFlags sets the MessageWithEnums message from flags.
 func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("regular", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("regular", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		enumValue, err := flagsplugin.SetEnumString(val, RegularEnum_value)
 		if err != nil {
 			return nil, err
@@ -120,9 +120,9 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		m.Regular = RegularEnum(enumValue)
 		paths = append(paths, flagsplugin.Prefix("regular", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("regulars", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("regulars", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, v := range val {
 			enumValue, err := flagsplugin.SetEnumString(v, RegularEnum_value)
 			if err != nil {
@@ -132,9 +132,9 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		}
 		paths = append(paths, flagsplugin.Prefix("regulars", prefix))
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("custom", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("custom", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value)
 		if err != nil {
 			return nil, err
@@ -142,9 +142,9 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		m.Custom = CustomEnum(enumValue)
 		paths = append(paths, flagsplugin.Prefix("custom", prefix))
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("customs", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("customs", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, v := range val {
 			enumValue, err := flagsplugin.SetEnumString(v, CustomEnum_value)
 			if err != nil {
@@ -154,7 +154,7 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		}
 		paths = append(paths, flagsplugin.Prefix("customs", prefix))
 	}
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("wrapped_custom", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("wrapped_custom", prefix)); changed {
 		m.WrappedCustom = &CustomEnumValue{}
 		if setPaths, err := m.WrappedCustom.SetFromFlags(flags, flagsplugin.Prefix("wrapped_custom", prefix)); err != nil {
 			return nil, err
@@ -162,9 +162,9 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 			paths = append(paths, setPaths...)
 		}
 	}
-	if val, selected, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("wrapped_customs", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("wrapped_customs", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		for _, value := range val {
 			enumValue, err := flagsplugin.SetEnumString(value, CustomEnum_value)
 			if err != nil {
@@ -221,9 +221,9 @@ func AddSetFlagsForMessageWithOneofEnums(flags *pflag.FlagSet, prefix string, hi
 
 // SetFromFlags sets the MessageWithOneofEnums message from flags.
 func (m *MessageWithOneofEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.regular", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.regular", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofEnums_Regular{}
 		enumValue, err := flagsplugin.SetEnumString(val, RegularEnum_value)
 		if err != nil {
@@ -233,9 +233,9 @@ func (m *MessageWithOneofEnums) SetFromFlags(flags *pflag.FlagSet, prefix string
 		paths = append(paths, flagsplugin.Prefix("value.regular", prefix))
 		m.Value = ov
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.custom", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.custom", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		ov := &MessageWithOneofEnums_Custom{}
 		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value)
 		if err != nil {
@@ -245,7 +245,7 @@ func (m *MessageWithOneofEnums) SetFromFlags(flags *pflag.FlagSet, prefix string
 		paths = append(paths, flagsplugin.Prefix("value.custom", prefix))
 		m.Value = ov
 	}
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("value.wrapped_custom", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("value.wrapped_custom", prefix)); changed {
 		ov := &MessageWithOneofEnums_WrappedCustom{}
 		ov.WrappedCustom = &CustomEnumValue{}
 		if setPaths, err := ov.WrappedCustom.SetFromFlags(flags, flagsplugin.Prefix("value.wrapped_custom", prefix)); err != nil {
@@ -294,15 +294,15 @@ func AddSetFlagsForMessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessage
 
 // SetFromFlags sets the MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum message from flags.
 func (m *MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		m.StringValue = val
 		paths = append(paths, flagsplugin.Prefix("string_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("test_enum_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("test_enum_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		enumValue, err := flagsplugin.SetEnumString(val, MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum_EmbeddedEnum_value)
 		if err != nil {
 			return nil, err
@@ -310,9 +310,9 @@ func (m *MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinition
 		m.TestEnumValue = MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum_EmbeddedEnum(enumValue)
 		paths = append(paths, flagsplugin.Prefix("test_enum_value", prefix))
 	}
-	if val, selected, err := flagsplugin.GetString(flags, flagsplugin.Prefix("test_another_enum_value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("test_another_enum_value", prefix)); err != nil {
 		return nil, err
-	} else if selected {
+	} else if changed {
 		enumValue, err := flagsplugin.SetEnumString(val, MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum_EmbeddedEnum_value)
 		if err != nil {
 			return nil, err
@@ -351,7 +351,7 @@ func AddSetFlagsForMessageWithEmbeddedMessageDefinitionWithEnums(flags *pflag.Fl
 
 // SetFromFlags sets the MessageWithEmbeddedMessageDefinitionWithEnums message from flags.
 func (m *MessageWithEmbeddedMessageDefinitionWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if selected := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("test_message_field", prefix)); selected {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("test_message_field", prefix)); changed {
 		m.TestMessageField = &MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum{}
 		if setPaths, err := m.TestMessageField.SetFromFlags(flags, flagsplugin.Prefix("test_message_field", prefix)); err != nil {
 			return nil, err
