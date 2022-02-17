@@ -11,14 +11,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewStringFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringFlag defines a new flag with string value.
+func NewStringFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetString returns a value from a string flag.
 func GetString(fs *pflag.FlagSet, name string) (value string, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -28,27 +32,35 @@ func GetString(fs *pflag.FlagSet, name string) (value string, set bool, err erro
 	return flag.Value.(*StringValue).Value, flag.Changed, nil
 }
 
+// StringValue implements pflag.Value interface.
 type StringValue struct {
 	Value string
 }
 
+// Set implements pflag.Value interface
 func (sv *StringValue) Set(s string) error {
 	sv.Value = s
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringValue) Type() string { return "string" }
 
+// String implements pflag.Value interface.
 func (sv *StringValue) String() string { return sv.Value }
 
-func NewStringSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringSliceFlag defines a new flag that holds a slice of strings.
+func NewStringSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringSliceValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringSlice returns a value from a string slice flag.
 func GetStringSlice(fs *pflag.FlagSet, name string) (value []string, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -62,10 +74,12 @@ func GetStringSlice(fs *pflag.FlagSet, name string) (value []string, set bool, e
 	return value, flag.Changed, nil
 }
 
+// StringSliceValue implements pflag.Value interface.
 type StringSliceValue struct {
 	Values []StringValue
 }
 
+// Set implements pflag.Value interface.
 func (ssv *StringSliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -81,8 +95,10 @@ func (ssv *StringSliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringSliceValue) Type() string { return "stringSlice" }
 
+// String implements pflag.Value interface.
 func (ssv *StringSliceValue) String() string {
 	if len(ssv.Values) == 0 {
 		return ""
@@ -94,14 +110,18 @@ func (ssv *StringSliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringStringMapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringStringMapFlag defines a new flag that holds a map of string to string.
+func NewStringStringMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringStringMapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringStringMap returns a value from a string to string map flag.
 func GetStringStringMap(fs *pflag.FlagSet, name string) (value map[string]string, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -115,10 +135,12 @@ func GetStringStringMap(fs *pflag.FlagSet, name string) (value map[string]string
 	return value, flag.Changed, nil
 }
 
+// StringStringMapValue implements pflag.Value interface.
 type StringStringMapValue struct {
 	Values map[string]StringValue
 }
 
+// Set implements pflag.Value interface.
 func (ssmv *StringStringMapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -137,8 +159,10 @@ func (ssmv *StringStringMapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringStringMapValue) Type() string { return "stringToString" }
 
+// String implements pflag.Value interface.
 func (ssmv *StringStringMapValue) String() string {
 	if len(ssmv.Values) == 0 {
 		return ""

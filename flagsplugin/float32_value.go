@@ -12,14 +12,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewFloat32Flag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewFloat32Flag defines a new flag with float32 value.
+func NewFloat32Flag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Float32Value{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetFloat32 returns a value from a float32 flag.
 func GetFloat32(fs *pflag.FlagSet, name string) (value float32, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -29,10 +33,12 @@ func GetFloat32(fs *pflag.FlagSet, name string) (value float32, set bool, err er
 	return flag.Value.(*Float32Value).Value, flag.Changed, nil
 }
 
+// Float32Value implements pflag.Value interface.
 type Float32Value struct {
 	Value float32
 }
 
+// Set implements pflag.Value interface
 func (fv *Float32Value) Set(s string) error {
 	v, err := strconv.ParseFloat(s, 32)
 	if err != nil {
@@ -42,18 +48,24 @@ func (fv *Float32Value) Set(s string) error {
 	return err
 }
 
+// Type implements pflag.Value interface.
 func (*Float32Value) Type() string { return "float32" }
 
+// String implements pflag.Value interface.
 func (fv *Float32Value) String() string { return strconv.FormatFloat(float64(fv.Value), 'g', -1, 32) }
 
-func NewFloat32SliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewFloat32SliceFlag defines a new flag that holds a slice of float32 values.
+func NewFloat32SliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Float32SliceValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetFloat32Slice returns a value from a float32 slice flag.
 func GetFloat32Slice(fs *pflag.FlagSet, name string) (value []float32, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -67,10 +79,12 @@ func GetFloat32Slice(fs *pflag.FlagSet, name string) (value []float32, set bool,
 	return value, flag.Changed, nil
 }
 
+// Float32SliceValue implements pflag.Value interface.
 type Float32SliceValue struct {
 	Values []Float32Value
 }
 
+// Set implements pflag.Value interface.
 func (fsv *Float32SliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -86,8 +100,10 @@ func (fsv *Float32SliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*Float32SliceValue) Type() string { return "float32Slice" }
 
+// String implements pflag.Value interface.
 func (fsv *Float32SliceValue) String() string {
 	if len(fsv.Values) == 0 {
 		return ""
@@ -99,14 +115,18 @@ func (fsv *Float32SliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringFloat32MapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringFloat32MapFlag defines a new flag that holds a map of string to float32.
+func NewStringFloat32MapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringFloat32MapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringFloat32Map returns a value from a string to float32 map flag.
 func GetStringFloat32Map(fs *pflag.FlagSet, name string) (value map[string]float32, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -120,10 +140,12 @@ func GetStringFloat32Map(fs *pflag.FlagSet, name string) (value map[string]float
 	return value, flag.Changed, nil
 }
 
+// StringFloat32MapValue implements pflag.Value interface.
 type StringFloat32MapValue struct {
 	Values map[string]Float32Value
 }
 
+// Set implements pflag.Value interface.
 func (sfmv *StringFloat32MapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -142,8 +164,10 @@ func (sfmv *StringFloat32MapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringFloat32MapValue) Type() string { return "stringToFloat32" }
 
+// String implements pflag.Value interface.
 func (sfmv *StringFloat32MapValue) String() string {
 	if len(sfmv.Values) == 0 {
 		return ""

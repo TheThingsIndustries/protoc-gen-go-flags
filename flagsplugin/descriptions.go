@@ -20,6 +20,7 @@ func (a sortedEnumsWithStringValue) Len() int           { return len(a) }
 func (a sortedEnumsWithStringValue) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a sortedEnumsWithStringValue) Less(i, j int) bool { return a[i].number < a[j].number }
 
+// EnumValueDesc returns a string with possible values for enum.
 func EnumValueDesc(valueMaps ...map[string]int32) string {
 	var all sortedEnumsWithStringValue
 	for _, valueMap := range valueMaps {
@@ -35,6 +36,7 @@ func EnumValueDesc(valueMaps ...map[string]int32) string {
 	return fmt.Sprintf("allowed values: %s", strings.Join(stringValues, ", "))
 }
 
+// SelectDesc returns a string with a description for select flags.
 func SelectDesc(fieldName string, withSubFields bool) string {
 	fieldName = toUnderscore.Replace(fieldName)
 	if withSubFields {

@@ -283,7 +283,7 @@ func TestSetFlagsMessageWithScalars(t *testing.T) {
 	for _, tt := range testMessagesWithScalars {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithScalars(fs, "")
+			AddSetFlagsForMessageWithScalars(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -293,7 +293,7 @@ func TestSetFlagsMessageWithOneofScalars(t *testing.T) {
 	for _, tt := range testMessagesWithOneofScalars {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithOneofScalars(fs, "")
+			AddSetFlagsForMessageWithOneofScalars(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -303,7 +303,7 @@ func TestSetFlagsMessageWithScalarMaps(t *testing.T) {
 	for _, tt := range testMessagesWithScalarMaps {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithScalarMaps(fs, "")
+			AddSetFlagsForMessageWithScalarMaps(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}

@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// SetterFromFlags defines interface for setting proto struct fields from flags.
 type SetterFromFlags interface {
 	SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error)
 }
@@ -33,6 +34,7 @@ func SetEnumString(v string, valueMaps ...map[string]int32) (int32, error) {
 	return int32(x), nil
 }
 
+// IsAnyPrefixSet returns true if any flag with a supplied prefix is set.
 func IsAnyPrefixSet(fs *pflag.FlagSet, prefix string) (flagSet bool) {
 	prefix = toDash.Replace(prefix)
 	fs.VisitAll(func(flag *pflag.Flag) {
@@ -43,6 +45,7 @@ func IsAnyPrefixSet(fs *pflag.FlagSet, prefix string) (flagSet bool) {
 	return flagSet
 }
 
+// Prefix returns a field name with prefix of the form {prefix}.{field}.
 func Prefix(field, prefix string) string {
 	if prefix == "" {
 		return field
@@ -50,6 +53,7 @@ func Prefix(field, prefix string) string {
 	return fmt.Sprintf("%s.%s", prefix, field)
 }
 
+// ErrFlagNotFound defines error on flagset.Lookup with unknown flag name.
 type ErrFlagNotFound struct {
 	FlagName string
 }
@@ -58,6 +62,7 @@ func (err *ErrFlagNotFound) Error() string { return fmt.Sprintf("flag %q not fou
 
 const trimChars = `'" `
 
+// SplitSliceElements returns a slice of strings from a single string with commas.
 func SplitSliceElements(s string) ([]string, error) {
 	r := csv.NewReader(bytes.NewBufferString(s))
 	elements, err := r.Read()
@@ -67,6 +72,7 @@ func SplitSliceElements(s string) ([]string, error) {
 	return elements, nil
 }
 
+// JoinSliceElements returns a comma separated string from a slice of strings.
 func JoinSliceElements(elements []string) string {
 	var buf bytes.Buffer
 	w := csv.NewWriter(&buf)

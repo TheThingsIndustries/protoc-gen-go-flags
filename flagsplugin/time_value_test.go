@@ -68,14 +68,6 @@ func TestTimestampValue(t *testing.T) {
 	if strVal := flag.Value.String(); strVal != now.Format(time.RFC3339Nano) {
 		t.Errorf("unexpected String value %q for parsed flag value", strVal)
 	}
-
-	// pvalue, err := fs.GetTimestamp("time-value")
-	// if err != nil {
-	// 	t.Errorf("unexpected error from standard GetTimestamp: %v", err)
-	// }
-	// if pvalue != value {
-	// 	t.Errorf("standard GetTimestamp returned different value than GetTimestamp")
-	// }
 }
 
 func TestTimeSliceValue(t *testing.T) {

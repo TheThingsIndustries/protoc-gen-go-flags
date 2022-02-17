@@ -12,14 +12,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewInt64Flag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewInt64Flag defines a new flag with int64 value.
+func NewInt64Flag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Int64Value{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetInt64 returns a value from a int64 flag.
 func GetInt64(fs *pflag.FlagSet, name string) (value int64, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -29,10 +33,12 @@ func GetInt64(fs *pflag.FlagSet, name string) (value int64, set bool, err error)
 	return flag.Value.(*Int64Value).Value, flag.Changed, nil
 }
 
+// Int64Value implements pflag.Value interface.
 type Int64Value struct {
 	Value int64
 }
 
+// Set implements pflag.Value interface
 func (iv *Int64Value) Set(s string) error {
 	v, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
@@ -42,18 +48,24 @@ func (iv *Int64Value) Set(s string) error {
 	return err
 }
 
+// Type implements pflag.Value interface.
 func (*Int64Value) Type() string { return "int64" }
 
+// String implements pflag.Value interface.
 func (iv *Int64Value) String() string { return strconv.FormatInt(iv.Value, 10) }
 
-func NewInt64SliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewInt64SliceFlag defines a new flag that holds a slice of int64 values.
+func NewInt64SliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Int64SliceValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetInt64Slice returns a value from a int64 slice flag.
 func GetInt64Slice(fs *pflag.FlagSet, name string) (value []int64, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -67,10 +79,12 @@ func GetInt64Slice(fs *pflag.FlagSet, name string) (value []int64, set bool, err
 	return value, flag.Changed, nil
 }
 
+// Int64SliceValue implements pflag.Value interface.
 type Int64SliceValue struct {
 	Values []Int64Value
 }
 
+// Set implements pflag.Value interface.
 func (isv *Int64SliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -86,8 +100,10 @@ func (isv *Int64SliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*Int64SliceValue) Type() string { return "int64Slice" }
 
+// String implements pflag.Value interface.
 func (isv *Int64SliceValue) String() string {
 	if len(isv.Values) == 0 {
 		return ""
@@ -99,14 +115,18 @@ func (isv *Int64SliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringInt64MapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringInt64MapFlag defines a new flag that holds a map of string to int64.
+func NewStringInt64MapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringInt64MapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringInt64Map returns a value from a string to int64 map flag.
 func GetStringInt64Map(fs *pflag.FlagSet, name string) (value map[string]int64, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -120,10 +140,12 @@ func GetStringInt64Map(fs *pflag.FlagSet, name string) (value map[string]int64, 
 	return value, flag.Changed, nil
 }
 
+// StringInt64MapValue implements pflag.Value interface.
 type StringInt64MapValue struct {
 	Values map[string]Int64Value
 }
 
+// Set implements pflag.Value interface.
 func (simv *StringInt64MapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -142,8 +164,10 @@ func (simv *StringInt64MapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringInt64MapValue) Type() string { return "stringToInt64" }
 
+// String implements pflag.Value interface.
 func (simv *StringInt64MapValue) String() string {
 	if len(simv.Values) == 0 {
 		return ""

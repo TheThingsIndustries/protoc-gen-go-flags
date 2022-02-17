@@ -23,7 +23,8 @@ func (g *generator) messageHasSelectFlags(message *protogen.Message) bool {
 		fieldOpts := field.Desc.Options().(*descriptorpb.FieldOptions)
 		if proto.HasExtension(fieldOpts, annotations.E_Field) {
 			if fieldExt, ok := proto.GetExtension(fieldOpts, annotations.E_Field).(*annotations.FieldOptions); ok {
-				if fieldExt.GetSelect() {
+				selectFlag := fieldExt.Select
+				if selectFlag == nil || fieldExt.GetSelect() {
 					generateSelectFlags = true
 				}
 			}
@@ -61,27 +62,31 @@ func (g *generator) messageHasCycle(message *protogen.Message, visited ...*proto
 
 func (g *generator) genMessageSelectFlags(message *protogen.Message) {
 	g.P("// AddSelectFlagsFor", message.GoIdent, " adds flags to select fields in ", message.GoIdent, ".")
-	g.P("func AddSelectFlagsFor", message.GoIdent, "(flags *", pflagPackage.Ident("FlagSet"), ", prefix string) ", " {")
+	g.P("func AddSelectFlagsFor", message.GoIdent, "(flags *", pflagPackage.Ident("FlagSet"), ", prefix string, hidden bool) ", " {")
 nextField:
 	for _, field := range message.Fields {
+		selectFlag, _, hidden := g.getFieldFlagBoolOptions(field)
+		if selectFlag != nil && !*selectFlag {
+			continue nextField
+		}
 		flagName := flagNameReplacer.Replace(string(field.Desc.Name()))
 		if field.Oneof != nil {
 			// If field is oneof, add oneof field name to the flag name as prefix.
 			flagName = flagNameReplacer.Replace(string(field.Oneof.Desc.Name())) + "." + flagName
 		}
 		if field.Message == nil || field.Desc.IsList() || field.Desc.IsMap() || messageIsWKT(field.Message) {
-			g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("SelectDesc("), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), false)))`)
+			g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("SelectDesc("), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), false), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			continue nextField
 		}
 		// If field is non-repeated message field, add bool flag with description that selecting it selects all subfields.
-		g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("SelectDesc("), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), true)))`)
+		g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("SelectDesc("), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), true), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 		// If message has no select flags or creates a cycle, don't recursively add subfield flags.
 		if !g.messageHasSelectFlags(field.Message) || g.messageHasCycle(field.Message) {
 			g.P("// NOTE: ", field.Desc.Name(), " (", field.Message.GoIdent, ") does not seem to have select flags.")
 			continue nextField
 		}
 		// Add select flags for subfields of the message.
-		g.P(field.Message.GoIdent.GoImportPath.Ident("AddSelectFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
+		g.P(field.Message.GoIdent.GoImportPath.Ident("AddSelectFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse(hidden, "true", "hidden"), ")")
 	}
 	g.P("}")
 	g.P()
@@ -92,6 +97,10 @@ func (g *generator) genFieldMaskSelectFromFlags(message *protogen.Message) {
 	g.P("func PathsFromSelectFlagsFor", message.GoIdent, "(flags *", pflagPackage.Ident("FlagSet"), ", prefix string) (paths []string, err error) {")
 nextField:
 	for _, field := range message.Fields {
+		selectFlag, _, _ := g.getFieldFlagBoolOptions(field)
+		if selectFlag != nil && !*selectFlag {
+			continue nextField
+		}
 		flagName := field.Desc.Name()
 		// If field is oneof, add oneof field name to the flag name as prefix.
 		if field.Oneof != nil {

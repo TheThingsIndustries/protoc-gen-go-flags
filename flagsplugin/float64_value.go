@@ -12,14 +12,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewFloat64Flag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewFloat64Flag defines a new flag with float64 value.
+func NewFloat64Flag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Float64Value{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetFloat64 returns a value from a float64 flag.
 func GetFloat64(fs *pflag.FlagSet, name string) (value float64, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -29,10 +33,12 @@ func GetFloat64(fs *pflag.FlagSet, name string) (value float64, set bool, err er
 	return flag.Value.(*Float64Value).Value, flag.Changed, nil
 }
 
+// Float64Value implements pflag.Value interface.
 type Float64Value struct {
 	Value float64
 }
 
+// Set implements pflag.Value interface
 func (fv *Float64Value) Set(s string) error {
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {
@@ -42,18 +48,24 @@ func (fv *Float64Value) Set(s string) error {
 	return err
 }
 
+// Type implements pflag.Value interface.
 func (*Float64Value) Type() string { return "float64" }
 
+// String implements pflag.Value interface.
 func (fv *Float64Value) String() string { return strconv.FormatFloat(fv.Value, 'g', -1, 64) }
 
-func NewFloat64SliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewFloat64SliceFlag defines a new flag that holds a slice of float64 values.
+func NewFloat64SliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Float64SliceValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetFloat64Slice returns a value from a float64 slice flag.
 func GetFloat64Slice(fs *pflag.FlagSet, name string) (value []float64, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -67,10 +79,12 @@ func GetFloat64Slice(fs *pflag.FlagSet, name string) (value []float64, set bool,
 	return value, flag.Changed, nil
 }
 
+// Float64SliceValue implements pflag.Value interface.
 type Float64SliceValue struct {
 	Values []Float64Value
 }
 
+// Set implements pflag.Value interface.
 func (fsv *Float64SliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -86,8 +100,10 @@ func (fsv *Float64SliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*Float64SliceValue) Type() string { return "float64Slice" }
 
+// String implements pflag.Value interface.
 func (fsv *Float64SliceValue) String() string {
 	if len(fsv.Values) == 0 {
 		return ""
@@ -99,14 +115,18 @@ func (fsv *Float64SliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringFloat64MapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringFloat64MapFlag defines a new flag that holds a map of string to float64.
+func NewStringFloat64MapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringFloat64MapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringFloat64Map returns a value from a string to float64 map flag.
 func GetStringFloat64Map(fs *pflag.FlagSet, name string) (value map[string]float64, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -120,10 +140,12 @@ func GetStringFloat64Map(fs *pflag.FlagSet, name string) (value map[string]float
 	return value, flag.Changed, nil
 }
 
+// StringFloat64MapValue implements pflag.Value interface.
 type StringFloat64MapValue struct {
 	Values map[string]Float64Value
 }
 
+// Set implements pflag.Value interface.
 func (sfmv *StringFloat64MapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -142,8 +164,10 @@ func (sfmv *StringFloat64MapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringFloat64MapValue) Type() string { return "stringToFloat64" }
 
+// String implements pflag.Value interface.
 func (sfmv *StringFloat64MapValue) String() string {
 	if len(sfmv.Values) == 0 {
 		return ""

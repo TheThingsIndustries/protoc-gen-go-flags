@@ -13,15 +13,15 @@ import (
 )
 
 // AddSelectFlagsForMessageWithGoGoOptions adds flags to select fields in MessageWithGoGoOptions.
-func AddSelectFlagsForMessageWithGoGoOptions(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("eui-with-custom-name", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("eui-with-custom-name", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("eui-with-custom-name-and-type", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("eui-with-custom-name-and-type", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-nullable-eui-with-custom-name-and-type", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("non-nullable-eui-with-custom-name-and-type", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("euis-with-custom-name-and-type", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("euis-with-custom-name-and-type", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("duration", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("duration", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-nullable-duration", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("non-nullable-duration", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("timestamp", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("timestamp", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-nullable-timestamp", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("non-nullable-timestamp", prefix), false)))
+func AddSelectFlagsForMessageWithGoGoOptions(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("eui-with-custom-name", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("eui-with-custom-name", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("eui-with-custom-name-and-type", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("eui-with-custom-name-and-type", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-nullable-eui-with-custom-name-and-type", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("non-nullable-eui-with-custom-name-and-type", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("euis-with-custom-name-and-type", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("euis-with-custom-name-and-type", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("duration", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("duration", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-nullable-duration", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("non-nullable-duration", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("timestamp", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("timestamp", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-nullable-timestamp", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("non-nullable-timestamp", prefix), false), flagsplugin.WithHidden(hidden)))
 }
 
 // SelectFromFlags outputs the fieldmask paths forMessageWithGoGoOptions message from select flags.
@@ -70,15 +70,15 @@ func PathsFromSelectFlagsForMessageWithGoGoOptions(flags *pflag.FlagSet, prefix 
 }
 
 // AddSetFlagsForMessageWithGoGoOptions adds flags to select fields in MessageWithGoGoOptions.
-func AddSetFlagsForMessageWithGoGoOptions(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBytesFlag(flagsplugin.Prefix("eui-with-custom-name", prefix), ""))
-	flags.AddFlag(types.New8BytesFlag(flagsplugin.Prefix("eui-with-custom-name-and-type", prefix), ""))
-	flags.AddFlag(types.New8BytesFlag(flagsplugin.Prefix("non-nullable-eui-with-custom-name-and-type", prefix), ""))
-	flags.AddFlag(types.New8BytesSliceFlag(flagsplugin.Prefix("euis-with-custom-name-and-type", prefix), ""))
-	flags.AddFlag(flagsplugin.NewDurationFlag(flagsplugin.Prefix("duration", prefix), ""))
-	flags.AddFlag(flagsplugin.NewDurationFlag(flagsplugin.Prefix("non-nullable-duration", prefix), ""))
-	flags.AddFlag(flagsplugin.NewTimestampFlag(flagsplugin.Prefix("timestamp", prefix), ""))
-	flags.AddFlag(flagsplugin.NewTimestampFlag(flagsplugin.Prefix("non-nullable-timestamp", prefix), ""))
+func AddSetFlagsForMessageWithGoGoOptions(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBytesFlag(flagsplugin.Prefix("eui-with-custom-name", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(types.New8BytesFlag(flagsplugin.Prefix("eui-with-custom-name-and-type", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(types.New8BytesFlag(flagsplugin.Prefix("non-nullable-eui-with-custom-name-and-type", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(types.New8BytesSliceFlag(flagsplugin.Prefix("euis-with-custom-name-and-type", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewDurationFlag(flagsplugin.Prefix("duration", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewDurationFlag(flagsplugin.Prefix("non-nullable-duration", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewTimestampFlag(flagsplugin.Prefix("timestamp", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewTimestampFlag(flagsplugin.Prefix("non-nullable-timestamp", prefix), "", flagsplugin.WithHidden(hidden)))
 }
 
 // SetFromFlags sets the MessageWithGoGoOptions message from flags.
@@ -135,8 +135,8 @@ func (m *MessageWithGoGoOptions) SetFromFlags(flags *pflag.FlagSet, prefix strin
 }
 
 // AddSelectFlagsForSubMessage adds flags to select fields in SubMessage.
-func AddSelectFlagsForSubMessage(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("field", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("field", prefix), false)))
+func AddSelectFlagsForSubMessage(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("field", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("field", prefix), false), flagsplugin.WithHidden(hidden)))
 }
 
 // SelectFromFlags outputs the fieldmask paths forSubMessage message from select flags.
@@ -150,8 +150,8 @@ func PathsFromSelectFlagsForSubMessage(flags *pflag.FlagSet, prefix string) (pat
 }
 
 // AddSetFlagsForSubMessage adds flags to select fields in SubMessage.
-func AddSetFlagsForSubMessage(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("field", prefix), ""))
+func AddSetFlagsForSubMessage(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("field", prefix), "", flagsplugin.WithHidden(hidden)))
 }
 
 // SetFromFlags sets the SubMessage message from flags.
@@ -166,8 +166,8 @@ func (m *SubMessage) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []
 }
 
 // AddSelectFlagsForSubMessageWithoutMarshalers adds flags to select fields in SubMessageWithoutMarshalers.
-func AddSelectFlagsForSubMessageWithoutMarshalers(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-field", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-field", prefix), false)))
+func AddSelectFlagsForSubMessageWithoutMarshalers(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-field", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-field", prefix), false), flagsplugin.WithHidden(hidden)))
 }
 
 // SelectFromFlags outputs the fieldmask paths forSubMessageWithoutMarshalers message from select flags.
@@ -181,8 +181,8 @@ func PathsFromSelectFlagsForSubMessageWithoutMarshalers(flags *pflag.FlagSet, pr
 }
 
 // AddSetFlagsForSubMessageWithoutMarshalers adds flags to select fields in SubMessageWithoutMarshalers.
-func AddSetFlagsForSubMessageWithoutMarshalers(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("other-field", prefix), ""))
+func AddSetFlagsForSubMessageWithoutMarshalers(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("other-field", prefix), "", flagsplugin.WithHidden(hidden)))
 }
 
 // SetFromFlags sets the SubMessageWithoutMarshalers message from flags.
@@ -197,13 +197,13 @@ func (m *SubMessageWithoutMarshalers) SetFromFlags(flags *pflag.FlagSet, prefix 
 }
 
 // AddSelectFlagsForMessageWithNullable adds flags to select fields in MessageWithNullable.
-func AddSelectFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("sub", prefix), true)))
-	AddSelectFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("subs", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("subs", prefix), false)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-sub", prefix), true)))
-	AddSelectFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-subs", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-subs", prefix), false)))
+func AddSelectFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("sub", prefix), true), flagsplugin.WithHidden(hidden)))
+	AddSelectFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("subs", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("subs", prefix), false), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-sub", prefix), true), flagsplugin.WithHidden(hidden)))
+	AddSelectFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-subs", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-subs", prefix), false), flagsplugin.WithHidden(hidden)))
 }
 
 // SelectFromFlags outputs the fieldmask paths forMessageWithNullable message from select flags.
@@ -242,10 +242,10 @@ func PathsFromSelectFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix str
 }
 
 // AddSetFlagsForMessageWithNullable adds flags to select fields in MessageWithNullable.
-func AddSetFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix string) {
-	AddSetFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix))
+func AddSetFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix string, hidden bool) {
+	AddSetFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix), hidden)
 	// FIXME: Skipping Subs because repeated messages are currently not supported.
-	AddSetFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix))
+	AddSetFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix), hidden)
 	// FIXME: Skipping OtherSubs because repeated messages are currently not supported.
 }
 
@@ -271,11 +271,11 @@ func (m *MessageWithNullable) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 }
 
 // AddSelectFlagsForMessageWithEmbedded adds flags to select fields in MessageWithEmbedded.
-func AddSelectFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("sub", prefix), true)))
-	AddSelectFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-sub", prefix), true)))
-	AddSelectFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix))
+func AddSelectFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("sub", prefix), true), flagsplugin.WithHidden(hidden)))
+	AddSelectFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-sub", prefix), true), flagsplugin.WithHidden(hidden)))
+	AddSelectFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix), hidden)
 }
 
 // SelectFromFlags outputs the fieldmask paths forMessageWithEmbedded message from select flags.
@@ -304,9 +304,9 @@ func PathsFromSelectFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix str
 }
 
 // AddSetFlagsForMessageWithEmbedded adds flags to select fields in MessageWithEmbedded.
-func AddSetFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string) {
-	AddSetFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix))
-	AddSetFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix))
+func AddSetFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string, hidden bool) {
+	AddSetFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix), hidden)
+	AddSetFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix), hidden)
 }
 
 // SetFromFlags sets the MessageWithEmbedded message from flags.
@@ -331,11 +331,11 @@ func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 }
 
 // AddSelectFlagsForMessageWithNullableEmbedded adds flags to select fields in MessageWithNullableEmbedded.
-func AddSelectFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, prefix string) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("sub", prefix), true)))
-	AddSelectFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-sub", prefix), true)))
-	AddSelectFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix))
+func AddSelectFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("sub", prefix), true), flagsplugin.WithHidden(hidden)))
+	AddSelectFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("other-sub", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("other-sub", prefix), true), flagsplugin.WithHidden(hidden)))
+	AddSelectFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix), hidden)
 }
 
 // SelectFromFlags outputs the fieldmask paths forMessageWithNullableEmbedded message from select flags.
@@ -364,9 +364,9 @@ func PathsFromSelectFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, pr
 }
 
 // AddSetFlagsForMessageWithNullableEmbedded adds flags to select fields in MessageWithNullableEmbedded.
-func AddSetFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, prefix string) {
-	AddSetFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix))
-	AddSetFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix))
+func AddSetFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, prefix string, hidden bool) {
+	AddSetFlagsForSubMessage(flags, flagsplugin.Prefix("sub", prefix), hidden)
+	AddSetFlagsForSubMessageWithoutMarshalers(flags, flagsplugin.Prefix("other-sub", prefix), hidden)
 }
 
 // SetFromFlags sets the MessageWithNullableEmbedded message from flags.

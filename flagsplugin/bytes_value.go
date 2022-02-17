@@ -14,8 +14,8 @@ import (
 )
 
 // NewBytesFlag defines a new flag with base64 bytes value.
-func NewBytesFlag(name, usage string) *pflag.Flag {
-	return NewBase64BytesFlag(name, usage)
+func NewBytesFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	return NewBase64BytesFlag(name, usage, opts...)
 }
 
 const (
@@ -24,21 +24,25 @@ const (
 )
 
 // NewBase64BytesFlag defines a new flag with base64 encoded bytes value.
-func NewBase64BytesFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+func NewBase64BytesFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &BytesValue{Encoding: base64Encoding},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
 // NewHexBytesFlag defines a new flag with hex encoded bytes value.
-func NewHexBytesFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+func NewHexBytesFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &BytesValue{Encoding: hexEncoding},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
 // GetBytes returns a value from a bytes flag.
@@ -108,27 +112,34 @@ func (bv *BytesValue) String() string {
 	}
 }
 
-
-func NewBytesSliceFlag(name, usage string) *pflag.Flag {
-	return NewBase64BytesSliceFlag(name, usage)
+// NewBytesSliceFlag defines a new bytes slice flag.
+func NewBytesSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	return NewBase64BytesSliceFlag(name, usage, opts...)
 }
 
-func NewBase64BytesSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewBase64BytesSliceFlag defines a new base64 bytes slice flag.
+func NewBase64BytesSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &BytesSliceValue{Encoding: base64Encoding},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
-func NewHexBytesSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewHexBytesSliceFlag defines a new hex bytes slice flag.
+func NewHexBytesSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &BytesSliceValue{Encoding: hexEncoding},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetBytesSlice returns a value from a byte slice flag.
 func GetBytesSlice(fs *pflag.FlagSet, name string) (value [][]byte, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -142,11 +153,13 @@ func GetBytesSlice(fs *pflag.FlagSet, name string) (value [][]byte, set bool, er
 	return value, flag.Changed, nil
 }
 
+// BytesSliceValue implements pflag.Value interface.
 type BytesSliceValue struct {
 	Encoding string
 	Values   []BytesValue
 }
 
+// Set implements pflag.Value interface.
 func (bsv *BytesSliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -162,6 +175,7 @@ func (bsv *BytesSliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (bsv *BytesSliceValue) Type() string {
 	switch bsv.Encoding {
 	case base64Encoding, "":
@@ -173,6 +187,7 @@ func (bsv *BytesSliceValue) Type() string {
 	}
 }
 
+// String implements pflag.Value interface.
 func (bsv *BytesSliceValue) String() string {
 	if len(bsv.Values) == 0 {
 		return ""
@@ -184,26 +199,34 @@ func (bsv *BytesSliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringBytesMapFlag(name, usage string) *pflag.Flag {
-	return NewStringBase64BytesMapFlag(name, usage)
+// NewStringBytesMapFlag defines a new string to bytes map flag.
+func NewStringBytesMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	return NewStringBase64BytesMapFlag(name, usage, opts...)
 }
 
-func NewStringBase64BytesMapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringBase64BytesMapFlag defines a new string to base64 bytes map flag.
+func NewStringBase64BytesMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringBytesMapValue{Encoding: base64Encoding},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
-func NewStringHexBytesMapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringHexBytesMapFlag defines a new string to hex bytes map flag.
+func NewStringHexBytesMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringBytesMapValue{Encoding: hexEncoding},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringBytesMap returns a string to bytes map value from the flag.
 func GetStringBytesMap(fs *pflag.FlagSet, name string) (value map[string][]byte, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -217,11 +240,13 @@ func GetStringBytesMap(fs *pflag.FlagSet, name string) (value map[string][]byte,
 	return value, flag.Changed, nil
 }
 
+// StringBytesMapValue implements pflag.Value interface.
 type StringBytesMapValue struct {
 	Encoding string
 	Values   map[string]BytesValue
 }
 
+// Set implements pflag.Value interface.
 func (sbmv *StringBytesMapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -240,6 +265,7 @@ func (sbmv *StringBytesMapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (sbmv *StringBytesMapValue) Type() string {
 	switch sbmv.Encoding {
 	case base64Encoding, "":
@@ -251,6 +277,7 @@ func (sbmv *StringBytesMapValue) Type() string {
 	}
 }
 
+// String implements pflag.Value interface.
 func (sbmv *StringBytesMapValue) String() string {
 	if len(sbmv.Values) == 0 {
 		return ""

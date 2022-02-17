@@ -74,7 +74,7 @@ func TestSetFlagsMessageWithGoGoOptions(t *testing.T) {
 	for _, tt := range testMessagesWithGoGoOptions {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithGoGoOptions(fs, "")
+			AddSetFlagsForMessageWithGoGoOptions(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -84,7 +84,7 @@ func TestSetFlagsMessageWithNullable(t *testing.T) {
 	for _, tt := range testMessagesWithNullable {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithNullable(fs, "")
+			AddSetFlagsForMessageWithNullable(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}

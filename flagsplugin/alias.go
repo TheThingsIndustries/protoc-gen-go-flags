@@ -7,14 +7,14 @@ import "github.com/spf13/pflag"
 
 // AddAlias creates a flag with different name that points to another flag.
 // Setting this flag will update the value in the child flag.
-func AddAlias(flagSet *pflag.FlagSet, flagName, aliasName string) {
+func AddAlias(flagSet *pflag.FlagSet, flagName, aliasName string, opts ...FlagOption) {
 	flag := flagSet.Lookup(flagName)
 
 	alias := *flag
 	alias.Name = aliasName
 	alias.Value = &AliasValue{target: flag}
 	alias.Usage = flag.Usage
-
+	ApplyOptions(&alias, opts...)
 	flagSet.AddFlag(&alias)
 }
 

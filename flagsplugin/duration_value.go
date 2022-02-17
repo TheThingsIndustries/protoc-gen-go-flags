@@ -12,14 +12,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewDurationFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewDurationFlag defines a new flag with bool value.
+func NewDurationFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &DurationValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetDuration returns a value from a duration flag.
 func GetDuration(fs *pflag.FlagSet, name string) (value time.Duration, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -29,10 +33,12 @@ func GetDuration(fs *pflag.FlagSet, name string) (value time.Duration, set bool,
 	return flag.Value.(*DurationValue).Value, flag.Changed, nil
 }
 
+// DurationValue implements pflag.Value interface.
 type DurationValue struct {
 	Value time.Duration
 }
 
+// Set implements pflag.Value interface
 func (dv *DurationValue) Set(s string) error {
 	v, err := time.ParseDuration(s)
 	if err != nil {
@@ -42,8 +48,10 @@ func (dv *DurationValue) Set(s string) error {
 	return err
 }
 
+// Type implements pflag.Value interface.
 func (*DurationValue) Type() string { return "duration" }
 
+// String implements pflag.Value interface.
 func (dv *DurationValue) String() string {
 	if dv.Value == 0 {
 		return ""
@@ -51,15 +59,19 @@ func (dv *DurationValue) String() string {
 	return dv.Value.String()
 }
 
-func NewDurationSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewDurationSliceFlag defines a new flag with bool slice value.
+func NewDurationSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:     name,
 		Usage:    usage,
 		Value:    &DurationSliceValue{},
 		DefValue: "0",
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetDurationSlice returns a value from a duration slice flag.
 func GetDurationSlice(fs *pflag.FlagSet, name string) (value []time.Duration, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -73,10 +85,12 @@ func GetDurationSlice(fs *pflag.FlagSet, name string) (value []time.Duration, se
 	return value, flag.Changed, nil
 }
 
+// DurationSliceValue implements pflag.Value interface.
 type DurationSliceValue struct {
 	Values []DurationValue
 }
 
+// Set implements pflag.Value interface
 func (dsv *DurationSliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -92,6 +106,7 @@ func (dsv *DurationSliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*DurationSliceValue) Type() string { return "durationSlice" }
 
 func (dsv *DurationSliceValue) String() string {
@@ -105,14 +120,18 @@ func (dsv *DurationSliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringDurationMapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringDurationMapFlag defines a new flag with string to duration map value.
+func NewStringDurationMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringDurationMapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringDurationMap returns a value from a string to duration map flag.
 func GetStringDurationMap(fs *pflag.FlagSet, name string) (value map[string]time.Duration, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -126,10 +145,12 @@ func GetStringDurationMap(fs *pflag.FlagSet, name string) (value map[string]time
 	return value, flag.Changed, nil
 }
 
+// StringDurationMapValue implements pflag.Value interface.
 type StringDurationMapValue struct {
 	Values map[string]DurationValue
 }
 
+// Set implements pflag.Value interface
 func (sdmv *StringDurationMapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -148,8 +169,10 @@ func (sdmv *StringDurationMapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringDurationMapValue) Type() string { return "stringToDuration" }
 
+// String implements pflag.Value interface.
 func (sdmv *StringDurationMapValue) String() string {
 	if len(sdmv.Values) == 0 {
 		return ""

@@ -27,7 +27,7 @@ func (g *generator) messageHasSetFlags(message *protogen.Message, visited ...*pr
 		fieldOpts := field.Desc.Options().(*descriptorpb.FieldOptions)
 		if proto.HasExtension(fieldOpts, annotations.E_Field) {
 			if fieldExt, ok := proto.GetExtension(fieldOpts, annotations.E_Field).(*annotations.FieldOptions); ok {
-				if fieldExt.GetSet() {
+				if fieldExt.Set == nil || fieldExt.GetSet() {
 					generateSetFlags = true
 				}
 			}
@@ -49,9 +49,13 @@ func (g *generator) messageHasSetFlags(message *protogen.Message, visited ...*pr
 
 func (g *generator) genMessageSetFlags(message *protogen.Message) {
 	g.P("// AddSetFlagsFor", message.GoIdent, " adds flags to select fields in ", message.GoIdent, ".")
-	g.P("func AddSetFlagsFor", message.GoIdent, "(flags *", pflagPackage.Ident("FlagSet"), ", prefix string) ", " {")
+	g.P("func AddSetFlagsFor", message.GoIdent, "(flags *", pflagPackage.Ident("FlagSet"), ", prefix string, hidden bool) ", " {")
 nextField:
 	for _, field := range message.Fields {
+		_, setFlag, hidden := g.getFieldFlagBoolOptions(field)
+		if setFlag != nil && !*setFlag {
+			continue nextField
+		}
 		var customFlagType *protogen.GoIdent
 		fieldOpts := field.Desc.Options()
 		if proto.HasExtension(fieldOpts, annotations.E_Field) {
@@ -76,7 +80,7 @@ nextField:
 
 			switch value.Desc.Kind() {
 			default:
-				g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForField(value)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForField(value)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			case protoreflect.EnumKind:
 				g.P("// FIXME: Skipping ", field.GoName, " because maps with enum value types are currently not supported.")
 			case protoreflect.MessageKind:
@@ -86,11 +90,11 @@ nextField:
 					if wrappedField.Desc.Kind() == protoreflect.EnumKind {
 						g.P("// FIXME: Skipping ", field.GoName, " because maps with enum value types are currently not supported.")
 					} else {
-						g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForField(wrappedField)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+						g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForField(wrappedField)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					}
 				// Add only flags for supported WKTs.
 				case isSupportedWKTSliceOrMap(value.Message):
-					g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForWKT(value.Message)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForWKT(value.Message)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 				default:
 					g.P("// FIXME: Skipping ", field.GoName, " because maps with message value types are currently not supported.")
 				}
@@ -101,21 +105,21 @@ nextField:
 		if field.Desc.IsList() {
 			if customFlagType != nil {
 				// If flag has a custom new flag definition, add this and continue with next field.
-				g.P("flags.AddFlag(", *customFlagType, "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+				g.P("flags.AddFlag(", *customFlagType, "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 				continue nextField
 			}
 			switch field.Desc.Kind() {
 			default:
-				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			case protoreflect.MessageKind:
 				switch {
 				case messageIsWrapper(field.Message):
 					wrappedField := field.Message.Fields[0]
 					if wrappedField.Desc.Kind() == protoreflect.EnumKind {
 						// If a wrapped field is enum, include enum value description.
-						g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), wrappedField.Enum.GoIdent, "_value)", "))")
+						g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), wrappedField.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					} else {
-						g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+						g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					}
 
 				case messageIsWKT(field.Message):
@@ -123,7 +127,7 @@ nextField:
 						g.P("// FIXME: Skipping ", field.GoName, " because this repeated WKT is currently not supported.")
 						continue nextField
 					}
-					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForWKT(field.Message)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForWKT(field.Message)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 
 				default:
 					g.P("// FIXME: Skipping ", field.GoName, " because repeated messages are currently not supported.")
@@ -133,42 +137,42 @@ nextField:
 		}
 		if customFlagType != nil {
 			// If flag has a custom new flag definition, add this and continue with next field.
-			g.P("flags.AddFlag(", *customFlagType, "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+			g.P("flags.AddFlag(", *customFlagType, "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			continue nextField
 		}
 		switch field.Desc.Kind() {
 		default:
-			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 		case protoreflect.EnumKind:
 			// If a field is enum, include enum value description.
-			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value)", "))")
+			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 		case protoreflect.MessageKind:
 			switch {
 			case g.messageHasSetFlags(field.Message):
 				// If the field is of type message, and the message has set flags, add those.
-				g.P(field.Message.GoIdent.GoImportPath.Ident("AddSetFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
+				g.P(field.Message.GoIdent.GoImportPath.Ident("AddSetFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse(hidden, "true", "hidden"), ")")
 				if messageIsWrapper(field.Message) {
 					// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
-					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
+					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
 				}
 			case messageIsWrapper(field.Message):
 				wrappedField := field.Message.Fields[0]
 				if wrappedField.Desc.Kind() == protoreflect.EnumKind {
 					// If a wrapped field is enum, include enum value description.
-					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value)", "))")
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
-					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
+					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
 					continue nextField
 				}
-				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), ""))`)
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), `))`)
 				// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
-				g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
+				g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
 			case messageIsWKT(field.Message):
 				if !isSupportedWKT(field.Message) {
 					g.P("// FIXME: Skipping ", field.GoName, " because this WKT is currently not supported.")
 					continue nextField
 				}
-				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForWKT(field.Message)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), ""))`)
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForWKT(field.Message)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			default:
 				g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
 			}
@@ -183,6 +187,10 @@ func (g *generator) genMessageSetterFromFlags(message *protogen.Message) {
 	g.P("func (m *", message.GoIdent, ") SetFromFlags(flags *", pflagPackage.Ident("FlagSet"), ", prefix string) (paths []string, err error) {")
 nextField:
 	for _, field := range message.Fields {
+		_, setFlag, _ := g.getFieldFlagBoolOptions(field)
+		if setFlag != nil && !*setFlag {
+			continue nextField
+		}
 		var (
 			fieldGoName  interface{} = fieldGoName(field)
 			customtype               = fieldCustomType(field)

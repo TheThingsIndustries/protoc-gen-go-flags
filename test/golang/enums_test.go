@@ -115,7 +115,7 @@ func TestSetFlagsMessageWithEnums(t *testing.T) {
 	for _, tt := range testMessagesWithEnums {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithEnums(fs, "")
+			AddSetFlagsForMessageWithEnums(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -125,7 +125,7 @@ func TestSetFlagsMessageWithOneofEnums(t *testing.T) {
 	for _, tt := range testMessagesWithOneofEnums {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithOneofEnums(fs, "")
+			AddSetFlagsForMessageWithOneofEnums(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}

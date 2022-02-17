@@ -12,14 +12,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewInt32Flag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewInt32Flag defines a new flag with int32 value.
+func NewInt32Flag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Int32Value{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetInt32 returns a value from a int32 flag.
 func GetInt32(fs *pflag.FlagSet, name string) (value int32, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -29,10 +33,12 @@ func GetInt32(fs *pflag.FlagSet, name string) (value int32, set bool, err error)
 	return flag.Value.(*Int32Value).Value, flag.Changed, nil
 }
 
+// Int32Value implements pflag.Value interface.
 type Int32Value struct {
 	Value int32
 }
 
+// Set implements pflag.Value interface
 func (iv *Int32Value) Set(s string) error {
 	v, err := strconv.ParseInt(s, 10, 32)
 	if err != nil {
@@ -42,18 +48,24 @@ func (iv *Int32Value) Set(s string) error {
 	return err
 }
 
+// Type implements pflag.Value interface.
 func (*Int32Value) Type() string { return "int32" }
 
-func (bv *Int32Value) String() string { return strconv.FormatInt(int64(bv.Value), 10) }
+// String implements pflag.Value interface.
+func (iv *Int32Value) String() string { return strconv.FormatInt(int64(iv.Value), 10) }
 
-func NewInt32SliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewInt32SliceFlag defines a new flag that holds a slice of int32 values.
+func NewInt32SliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &Int32SliceValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetInt32Slice returns a value from a int32 slice flag.
 func GetInt32Slice(fs *pflag.FlagSet, name string) (value []int32, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -67,10 +79,12 @@ func GetInt32Slice(fs *pflag.FlagSet, name string) (value []int32, set bool, err
 	return value, flag.Changed, nil
 }
 
+// Int32SliceValue implements pflag.Value interface.
 type Int32SliceValue struct {
 	Values []Int32Value
 }
 
+// Set implements pflag.Value interface.
 func (isv *Int32SliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -86,8 +100,10 @@ func (isv *Int32SliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*Int32SliceValue) Type() string { return "int32Slice" }
 
+// String implements pflag.Value interface.
 func (isv *Int32SliceValue) String() string {
 	if len(isv.Values) == 0 {
 		return ""
@@ -99,14 +115,18 @@ func (isv *Int32SliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringInt32MapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringInt32MapFlag defines a new flag that holds a map of string to int32.
+func NewStringInt32MapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringInt32MapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringInt32Map returns a value from a string to int32 map flag.
 func GetStringInt32Map(fs *pflag.FlagSet, name string) (value map[string]int32, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -120,10 +140,12 @@ func GetStringInt32Map(fs *pflag.FlagSet, name string) (value map[string]int32, 
 	return value, flag.Changed, nil
 }
 
+// StringInt32MapValue implements pflag.Value interface.
 type StringInt32MapValue struct {
 	Values map[string]Int32Value
 }
 
+// Set implements pflag.Value interface.
 func (simv *StringInt32MapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -142,8 +164,10 @@ func (simv *StringInt32MapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringInt32MapValue) Type() string { return "stringToInt32" }
 
+// String implements pflag.Value interface.
 func (simv *StringInt32MapValue) String() string {
 	if len(simv.Values) == 0 {
 		return ""

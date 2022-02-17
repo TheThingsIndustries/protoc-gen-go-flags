@@ -279,7 +279,7 @@ func TestSetFlagsMessageWithWKTs(t *testing.T) {
 	for _, tt := range testMessagesWithWKTs {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithWKTs(fs, "")
+			AddSetFlagsForMessageWithWKTs(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -289,7 +289,7 @@ func TestSetFlagsMessageWithOneofWKTs(t *testing.T) {
 	for _, tt := range testMessagesWithOneofWKTs {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithOneofWKTs(fs, "")
+			AddSetFlagsForMessageWithOneofWKTs(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -299,7 +299,7 @@ func TestSetFlagsMessageWithWKTMaps(t *testing.T) {
 	for _, tt := range testMessagesWithWKTMaps {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForMessageWithWKTMaps(fs, "")
+			AddSetFlagsForMessageWithWKTMaps(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}

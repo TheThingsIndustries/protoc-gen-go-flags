@@ -13,13 +13,15 @@ import (
 )
 
 // NewBoolFlag defines a new flag with bool value.
-func NewBoolFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+func NewBoolFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:        name,
 		Usage:       usage,
 		Value:       &BoolValue{},
 		NoOptDefVal: "true",
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
 // GetBool returns a value from a bool flag.
@@ -54,12 +56,14 @@ func (*BoolValue) Type() string { return "bool" }
 func (bv *BoolValue) String() string { return strconv.FormatBool(bv.Value) }
 
 // NewBoolSliceFlag defines a new flag that holds a slice of bools.
-func NewBoolSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+func NewBoolSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &BoolSliceValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
 // GetBoolSlice returns a value from a bool slice flag.
@@ -113,15 +117,17 @@ func (bsv *BoolSliceValue) String() string {
 }
 
 // NewStringBoolMapFlag defines a new flag that holds a map of string to bool.
-func NewStringBoolMapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+func NewStringBoolMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringBoolMapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
-// GetStringBoolMap returns a value from a string bool map flag.
+// GetStringBoolMap returns a value from a string to bool map flag.
 func GetStringBoolMap(fs *pflag.FlagSet, name string) (value map[string]bool, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)

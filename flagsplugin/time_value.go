@@ -12,14 +12,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewTimestampFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewTimestampFlag defines a new flag with time value.
+func NewTimestampFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &TimestampValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetTimestamp returns a value from a time flag.
 func GetTimestamp(fs *pflag.FlagSet, name string) (value time.Time, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -29,10 +33,12 @@ func GetTimestamp(fs *pflag.FlagSet, name string) (value time.Time, set bool, er
 	return flag.Value.(*TimestampValue).Value, flag.Changed, nil
 }
 
+// TimestampValue implements pflag.Value interface.
 type TimestampValue struct {
 	Value time.Time
 }
 
+// Set implements pflag.Value interface
 func (tv *TimestampValue) Set(s string) error {
 	v, err := time.Parse(time.RFC3339Nano, s)
 	if err != nil {
@@ -42,8 +48,10 @@ func (tv *TimestampValue) Set(s string) error {
 	return err
 }
 
+// Type implements pflag.Value interface.
 func (*TimestampValue) Type() string { return "timestamp" }
 
+// String implements pflag.Value interface.
 func (tv *TimestampValue) String() string {
 	if tv.Value.IsZero() {
 		return ""
@@ -51,15 +59,19 @@ func (tv *TimestampValue) String() string {
 	return tv.Value.Format(time.RFC3339Nano)
 }
 
-func NewTimestampSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewTimestampSliceFlag defines a new flag that holds a slice of time values.
+func NewTimestampSliceFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:     name,
 		Usage:    usage,
 		Value:    &TimestampSliceValue{},
 		DefValue: "0",
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetTimestampSlice returns a value from a time slice flag.
 func GetTimestampSlice(fs *pflag.FlagSet, name string) (value []time.Time, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -73,10 +85,12 @@ func GetTimestampSlice(fs *pflag.FlagSet, name string) (value []time.Time, set b
 	return value, flag.Changed, nil
 }
 
+// TimestampSliceValue implements pflag.Value interface.
 type TimestampSliceValue struct {
 	Values []TimestampValue
 }
 
+// Set implements pflag.Value interface.
 func (tsv *TimestampSliceValue) Set(s string) error {
 	vs, err := SplitSliceElements(s)
 	if err != nil {
@@ -92,8 +106,10 @@ func (tsv *TimestampSliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*TimestampSliceValue) Type() string { return "timestampSlice" }
 
+// String implements pflag.Value interface.
 func (tsv *TimestampSliceValue) String() string {
 	if len(tsv.Values) == 0 {
 		return ""
@@ -105,14 +121,18 @@ func (tsv *TimestampSliceValue) String() string {
 	return "[" + JoinSliceElements(vs) + "]"
 }
 
-func NewStringTimestampMapFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// NewStringTimestampMapFlag defines a new flag that holds a map of string to time.
+func NewStringTimestampMapFlag(name, usage string, opts ...FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &StringTimestampMapValue{},
 	}
+	ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetStringTimestampMap returns a value from a string to time map flag.
 func GetStringTimestampMap(fs *pflag.FlagSet, name string) (value map[string]time.Time, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -126,10 +146,12 @@ func GetStringTimestampMap(fs *pflag.FlagSet, name string) (value map[string]tim
 	return value, flag.Changed, nil
 }
 
+// StringTimestampMapValue implements pflag.Value interface.
 type StringTimestampMapValue struct {
 	Values map[string]TimestampValue
 }
 
+// Set implements pflag.Value interface.
 func (stmv *StringTimestampMapValue) Set(s string) error {
 	kv, err := splitStringMapElements(s)
 	if err != nil {
@@ -148,8 +170,10 @@ func (stmv *StringTimestampMapValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (*StringTimestampMapValue) Type() string { return "stringToTimestamp" }
 
+// String implements pflag.Value interface.
 func (stmv *StringTimestampMapValue) String() string {
 	if len(stmv.Values) == 0 {
 		return ""

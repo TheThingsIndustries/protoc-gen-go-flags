@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// GetExactBytes returns a value from a bytes flag.
 func GetExactBytes(fs *pflag.FlagSet, name string) (value []byte, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -22,11 +23,13 @@ func GetExactBytes(fs *pflag.FlagSet, name string) (value []byte, set bool, err 
 	return flag.Value.(*ExactBytesValue).Value, flag.Changed, nil
 }
 
+// ExactBytesValue implements pflag.Value interface.
 type ExactBytesValue struct {
 	length int
 	Value  []byte
 }
 
+// Set implements pflag.Value interface.
 func (ebv *ExactBytesValue) Set(s string) error {
 	trimmed := strings.TrimSuffix(s, "=")
 	switch len(trimmed) {
@@ -48,22 +51,28 @@ func (ebv *ExactBytesValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (ebv *ExactBytesValue) Type() string {
 	return fmt.Sprintf("%d-bytes", ebv.length)
 }
 
+// String implements pflag.Value interface.
 func (ebv *ExactBytesValue) String() string {
 	return hex.EncodeToString(ebv.Value)
 }
 
-func New8BytesFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// New8BytesFlag defines a new flag that holds a byte array of length 8.
+func New8BytesFlag(name, usage string, opts ...flagsplugin.FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &ExactBytesValue{length: 8},
 	}
+	flagsplugin.ApplyOptions(flag, opts...)
+	return flag
 }
 
+// GetExactBytesSlice returns a value from a byte flag.
 func GetExactBytesSlice(fs *pflag.FlagSet, name string) (value [][]byte, set bool, err error) {
 	name = toDash.Replace(name)
 	flag := fs.Lookup(name)
@@ -77,11 +86,13 @@ func GetExactBytesSlice(fs *pflag.FlagSet, name string) (value [][]byte, set boo
 	return value, flag.Changed, nil
 }
 
+// ExactBytesSliceValue implements pflag.Value interface.
 type ExactBytesSliceValue struct {
 	length int
 	Values []ExactBytesValue
 }
 
+// Set implements pflag.Value interface.
 func (ebv *ExactBytesSliceValue) Set(s string) error {
 	vs, err := flagsplugin.SplitSliceElements(s)
 	if err != nil {
@@ -97,10 +108,12 @@ func (ebv *ExactBytesSliceValue) Set(s string) error {
 	return nil
 }
 
+// Type implements pflag.Value interface.
 func (ebv *ExactBytesSliceValue) Type() string {
 	return fmt.Sprintf("%d-bytes", ebv.length)
 }
 
+// String implements pflag.Value interface.
 func (ebv *ExactBytesSliceValue) String() string {
 	if len(ebv.Values) == 0 {
 		return ""
@@ -112,10 +125,13 @@ func (ebv *ExactBytesSliceValue) String() string {
 	return "[" + flagsplugin.JoinSliceElements(vs) + "]"
 }
 
-func New8BytesSliceFlag(name, usage string) *pflag.Flag {
-	return &pflag.Flag{
+// New8BytesSliceFlag defines a new flag that holds a slice of byte arrays of length 8.
+func New8BytesSliceFlag(name, usage string, opts ...flagsplugin.FlagOption) *pflag.Flag {
+	flag := &pflag.Flag{
 		Name:  name,
 		Usage: usage,
 		Value: &ExactBytesSliceValue{length: 8},
 	}
+	flagsplugin.ApplyOptions(flag, opts...)
+	return flag
 }
