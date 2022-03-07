@@ -15,10 +15,10 @@ clean:
 	mkdir -p $(shell dirname $@)
 	cp $< $@
 
-annotations/annotations.pb.go: .dev/protoc-gen-go-flags/annotations.proto
+annotations/annotations.pb.go: .dev/protoc-gen-go-flags/annotations.proto .dev/golangproto/bin/protoc .dev/golangproto/bin/protoc-gen-go
 	PATH="$$PWD/.bin:$$PWD/.dev/golangproto/bin:$$PATH" protoc -I .dev --go_opt=module=github.com/TheThingsIndustries/protoc-gen-go-flags --go_out=./ $<
 
-internal/gogoproto/gogo.pb.go: internal/gogoproto/gogo.proto
+internal/gogoproto/gogo.pb.go: internal/gogoproto/gogo.proto .dev/golangproto/bin/protoc .dev/golangproto/bin/protoc-gen-go
 	PATH="$$PWD/.bin:$$PWD/.dev/golangproto/bin:$$PATH" protoc -I . --go_opt=paths=source_relative --go_out=./ ./internal/gogoproto/gogo.proto
 
 internal/flagsplugin/annotations.pb.go: internal/flagsplugin/annotations.proto
@@ -71,18 +71,21 @@ endif
 	unzip -o .dev/gogoproto/gogoproto.zip protobuf-master/protobuf/google/protobuf/*.proto -d .dev/gogoproto
 	mv .dev/gogoproto/protobuf-master/protobuf/google/protobuf/*.proto .dev/gogoproto/include/google/protobuf/
 
+.dev/golangproto/bin/protoc-gen-go:
+	go build -o $@ google.golang.org/protobuf/cmd/protoc-gen-go
+
 .dev/gogoproto/bin/protoc-gen-gogo:
 	go build -o $@ github.com/gogo/protobuf/protoc-gen-gogo
 
 .PHONY: testprotos
 
-testprotos: build .dev/golangproto/bin/protoc .dev/gogoproto/bin/protoc .dev/gogoproto/bin/protoc-gen-gogo
+testprotos: build .dev/golangproto/bin/protoc .dev/gogoproto/bin/protoc .dev/golangproto/bin/protoc-gen-go .dev/gogoproto/bin/protoc-gen-gogo
 	PATH="$$PWD/.bin:$$PWD/.dev/golangproto/bin:$$PATH" protoc -I ./test -I . \
 	  --go_opt=paths=source_relative --go_out=./test/golang \
 	  --go-flags_opt=paths=source_relative --go-flags_out=./test/golang \
 	  ./test/*.proto
 	PATH="$$PWD/.bin:$$PWD/.dev/gogoproto/bin:$$PATH" protoc -I ./test -I . \
-	  --gogo_opt=paths=source_relative --gogo_opt=$(REPLACES)  --gogo_out=./test/gogo \
+	  --gogo_opt=paths=source_relative --gogo_opt=$(REPLACES) --gogo_out=./test/gogo \
 	  --go-flags_opt=paths=source_relative --go-flags_opt=$(REPLACES) --go-flags_opt=lang=gogo --go-flags_out=./test/gogo \
 	  ./test/*.proto
 
