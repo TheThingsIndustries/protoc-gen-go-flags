@@ -53,7 +53,8 @@ func (g *generator) messageHasCycle(message *protogen.Message, visited ...*proto
 		}
 	}
 	for _, field := range message.Fields {
-		if field.Message != nil && g.messageHasCycle(message, append(visited, message)...) && g.messageHasSelectFlags(message) {
+		selectFlag, _, _ := g.getFieldFlagBoolOptions(field)
+		if field.Message != nil && g.messageHasCycle(field.Message, append(visited, message)...) && g.messageHasSelectFlags(field.Message) && selectFlag != nil && !*selectFlag {
 			return true
 		}
 	}
