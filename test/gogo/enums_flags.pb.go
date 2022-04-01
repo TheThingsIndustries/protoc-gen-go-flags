@@ -100,9 +100,9 @@ func PathsFromSelectFlagsForMessageWithEnums(flags *pflag.FlagSet, prefix string
 // AddSetFlagsForMessageWithEnums adds flags to select fields in MessageWithEnums.
 func AddSetFlagsForMessageWithEnums(flags *pflag.FlagSet, prefix string, hidden bool) {
 	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("regular", prefix), flagsplugin.EnumValueDesc(RegularEnum_value), flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("regulars", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("regulars", prefix), flagsplugin.EnumValueDesc(RegularEnum_value), flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("custom", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("customs", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("customs", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
 	AddSetFlagsForCustomEnumValue(flags, flagsplugin.Prefix("wrapped-custom", prefix), hidden)
 	flagsplugin.AddAlias(flags, flagsplugin.Prefix("wrapped-custom.value", prefix), flagsplugin.Prefix("wrapped-custom", prefix), flagsplugin.WithHidden(hidden))
 	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("wrapped-customs", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
