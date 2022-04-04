@@ -111,6 +111,8 @@ nextField:
 			switch field.Desc.Kind() {
 			default:
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+			case protoreflect.EnumKind:
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			case protoreflect.MessageKind:
 				switch {
 				case messageIsWrapper(field.Message):
