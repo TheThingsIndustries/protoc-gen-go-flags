@@ -24,6 +24,10 @@ enum RegularEnum {
 }
 
 enum CustomEnum {
+  option (thethings.flags.enum) = { 
+    alias_map: "github.com/TheThingsIndustries/protoc-gen-go-flags/test/enum.CustomEnum_customvalue" 
+  };
+
   CUSTOM_UNKNOWN = 0;
   CUSTOM_V1_0    = 1;
   CUSTOM_V1_0_1  = 2;

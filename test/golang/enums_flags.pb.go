@@ -8,6 +8,7 @@ package test
 
 import (
 	flagsplugin "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin"
+	enum "github.com/TheThingsIndustries/protoc-gen-go-flags/test/enum"
 	pflag "github.com/spf13/pflag"
 )
 
@@ -28,7 +29,7 @@ func PathsFromSelectFlagsForCustomEnumValue(flags *pflag.FlagSet, prefix string)
 
 // AddSetFlagsForCustomEnumValue adds flags to select fields in CustomEnumValue.
 func AddSetFlagsForCustomEnumValue(flags *pflag.FlagSet, prefix string, hidden bool) {
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value", prefix), flagsplugin.EnumValueDesc(CustomEnum_value, enum.CustomEnum_customvalue), flagsplugin.WithHidden(hidden)))
 }
 
 // SetFromFlags sets the CustomEnumValue message from flags.
@@ -36,7 +37,7 @@ func (m *CustomEnumValue) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value)
+		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value, enum.CustomEnum_customvalue)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +54,7 @@ func AddSelectFlagsForMessageWithEnums(flags *pflag.FlagSet, prefix string, hidd
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("custom", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("custom", prefix), false), flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("customs", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("customs", prefix), false), flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("wrapped-custom", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("wrapped-custom", prefix), true), flagsplugin.WithHidden(hidden)))
-	AddSelectFlagsForCustomEnumValue(flags, flagsplugin.Prefix("wrapped-custom", prefix), hidden)
+	AddSelectFlagsForCustomEnumValue(flags, flagsplugin.Prefix("wrapped-custom", prefix), true)
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("wrapped-customs", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("wrapped-customs", prefix), false), flagsplugin.WithHidden(hidden)))
 }
 
@@ -101,11 +102,11 @@ func PathsFromSelectFlagsForMessageWithEnums(flags *pflag.FlagSet, prefix string
 func AddSetFlagsForMessageWithEnums(flags *pflag.FlagSet, prefix string, hidden bool) {
 	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("regular", prefix), flagsplugin.EnumValueDesc(RegularEnum_value), flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("regulars", prefix), flagsplugin.EnumValueDesc(RegularEnum_value), flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("custom", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("customs", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
-	AddSetFlagsForCustomEnumValue(flags, flagsplugin.Prefix("wrapped-custom", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("custom", prefix), flagsplugin.EnumValueDesc(CustomEnum_value, enum.CustomEnum_customvalue), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("customs", prefix), flagsplugin.EnumValueDesc(CustomEnum_value, enum.CustomEnum_customvalue), flagsplugin.WithHidden(hidden)))
+	AddSetFlagsForCustomEnumValue(flags, flagsplugin.Prefix("wrapped-custom", prefix), true)
 	flagsplugin.AddAlias(flags, flagsplugin.Prefix("wrapped-custom.value", prefix), flagsplugin.Prefix("wrapped-custom", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("wrapped-customs", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("wrapped-customs", prefix), flagsplugin.EnumValueDesc(CustomEnum_value, enum.CustomEnum_customvalue), flagsplugin.WithHidden(hidden)))
 }
 
 // SetFromFlags sets the MessageWithEnums message from flags.
@@ -135,7 +136,7 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("custom", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value)
+		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value, enum.CustomEnum_customvalue)
 		if err != nil {
 			return nil, err
 		}
@@ -146,7 +147,7 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		return nil, err
 	} else if changed {
 		for _, v := range val {
-			enumValue, err := flagsplugin.SetEnumString(v, CustomEnum_value)
+			enumValue, err := flagsplugin.SetEnumString(v, CustomEnum_value, enum.CustomEnum_customvalue)
 			if err != nil {
 				return nil, err
 			}
@@ -166,7 +167,7 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		return nil, err
 	} else if changed {
 		for _, value := range val {
-			enumValue, err := flagsplugin.SetEnumString(value, CustomEnum_value)
+			enumValue, err := flagsplugin.SetEnumString(value, CustomEnum_value, enum.CustomEnum_customvalue)
 			if err != nil {
 				return nil, err
 			}
@@ -183,7 +184,7 @@ func AddSelectFlagsForMessageWithOneofEnums(flags *pflag.FlagSet, prefix string,
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("value.regular", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("value.regular", prefix), false), flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("value.custom", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("value.custom", prefix), false), flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("value.wrapped-custom", prefix), flagsplugin.SelectDesc(flagsplugin.Prefix("value.wrapped-custom", prefix), true), flagsplugin.WithHidden(hidden)))
-	AddSelectFlagsForCustomEnumValue(flags, flagsplugin.Prefix("value.wrapped-custom", prefix), hidden)
+	AddSelectFlagsForCustomEnumValue(flags, flagsplugin.Prefix("value.wrapped-custom", prefix), true)
 }
 
 // SelectFromFlags outputs the fieldmask paths forMessageWithOneofEnums message from select flags.
@@ -214,8 +215,8 @@ func PathsFromSelectFlagsForMessageWithOneofEnums(flags *pflag.FlagSet, prefix s
 // AddSetFlagsForMessageWithOneofEnums adds flags to select fields in MessageWithOneofEnums.
 func AddSetFlagsForMessageWithOneofEnums(flags *pflag.FlagSet, prefix string, hidden bool) {
 	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value.regular", prefix), flagsplugin.EnumValueDesc(RegularEnum_value), flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value.custom", prefix), flagsplugin.EnumValueDesc(CustomEnum_value), flagsplugin.WithHidden(hidden)))
-	AddSetFlagsForCustomEnumValue(flags, flagsplugin.Prefix("value.wrapped-custom", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value.custom", prefix), flagsplugin.EnumValueDesc(CustomEnum_value, enum.CustomEnum_customvalue), flagsplugin.WithHidden(hidden)))
+	AddSetFlagsForCustomEnumValue(flags, flagsplugin.Prefix("value.wrapped-custom", prefix), true)
 	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.wrapped-custom.value", prefix), flagsplugin.Prefix("value.wrapped-custom", prefix), flagsplugin.WithHidden(hidden))
 }
 
@@ -237,7 +238,7 @@ func (m *MessageWithOneofEnums) SetFromFlags(flags *pflag.FlagSet, prefix string
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofEnums_Custom{}
-		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value)
+		enumValue, err := flagsplugin.SetEnumString(val, CustomEnum_value, enum.CustomEnum_customvalue)
 		if err != nil {
 			return nil, err
 		}
