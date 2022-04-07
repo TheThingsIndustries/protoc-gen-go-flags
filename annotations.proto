@@ -64,7 +64,10 @@ extend google.protobuf.OneofOptions {
 }
 
 message EnumOptions {
-
+  // Path where the custom enum values are defined.
+  // The map must be of type string to int32, where string is an alias name and
+  // int32 must be a valid enum int32.
+  optional string alias_map = 1;
 }
 
 extend google.protobuf.EnumOptions {

@@ -87,7 +87,7 @@ nextField:
 			continue nextField
 		}
 		// Add select flags for subfields of the message.
-		g.P(field.Message.GoIdent.GoImportPath.Ident("AddSelectFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse(hidden, "true", "hidden"), ")")
+		g.P(field.Message.GoIdent.GoImportPath.Ident("AddSelectFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse(hidden || messageIsWrapper(field.Message), "true", "hidden"), ")")
 	}
 	g.P("}")
 	g.P()

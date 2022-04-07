@@ -61,6 +61,21 @@ nextField:
 		if proto.HasExtension(fieldOpts, annotations.E_Field) {
 			customFlagType = parseGoIdent(proto.GetExtension(field.Desc.Options(), annotations.E_Field).(*annotations.FieldOptions).GetSetFlagNewFunc())
 		}
+		var enumAliasMap *protogen.GoIdent
+		// If field is enum, check if there is an alias map defined for it.
+		if field.Desc.Kind() == protoreflect.EnumKind {
+			enumOpts := field.Enum.Desc.Options()
+			if proto.HasExtension(enumOpts, annotations.E_Enum) {
+				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
+			}
+		}
+		// If field is a wrapped enum, check if there is an alias map defined for it.
+		if field.Desc.Kind() == protoreflect.MessageKind && messageIsWrapper(field.Message) && field.Message.Fields[0].Desc.Kind() == protoreflect.EnumKind {
+			enumOpts := field.Message.Fields[0].Enum.Desc.Options()
+			if proto.HasExtension(enumOpts, annotations.E_Enum) {
+				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
+			}
+		}
 		// Convert field name to flag name (underscore to dash).
 		flagName := flagNameReplacer.Replace(string(field.Desc.Name()))
 		// If field is oneof, add oneof field name to flag name.
@@ -112,12 +127,20 @@ nextField:
 			default:
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			case protoreflect.EnumKind:
-				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+				if enumAliasMap != nil {
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value, ", *enumAliasMap, "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+					continue nextField
+				}
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value", "", "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			case protoreflect.MessageKind:
 				switch {
 				case messageIsWrapper(field.Message):
 					wrappedField := field.Message.Fields[0]
 					if wrappedField.Desc.Kind() == protoreflect.EnumKind {
+						if enumAliasMap != nil {
+							g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), wrappedField.Enum.GoIdent, "_value, ", *enumAliasMap, "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+							continue nextField
+						}
 						// If a wrapped field is enum, include enum value description.
 						g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), wrappedField.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					} else {
@@ -146,13 +169,17 @@ nextField:
 		default:
 			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 		case protoreflect.EnumKind:
+			if enumAliasMap != nil {
+				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value, ", *enumAliasMap, "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+				continue nextField
+			}
 			// If a field is enum, include enum value description.
 			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 		case protoreflect.MessageKind:
 			switch {
 			case g.messageHasSetFlags(field.Message):
 				// If the field is of type message, and the message has set flags, add those.
-				g.P(field.Message.GoIdent.GoImportPath.Ident("AddSetFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse(hidden, "true", "hidden"), ")")
+				g.P(field.Message.GoIdent.GoImportPath.Ident("AddSetFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse((hidden || messageIsWrapper(field.Message)), "true", "hidden"), ")")
 				if messageIsWrapper(field.Message) {
 					// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
 					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
@@ -160,6 +187,11 @@ nextField:
 			case messageIsWrapper(field.Message):
 				wrappedField := field.Message.Fields[0]
 				if wrappedField.Desc.Kind() == protoreflect.EnumKind {
+					if enumAliasMap != nil {
+						g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), wrappedField.Enum.GoIdent, "_value, ", *enumAliasMap, "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+						g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
+						continue nextField
+					}
 					// If a wrapped field is enum, include enum value description.
 					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), "(true)", "))")
 					// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
@@ -206,6 +238,21 @@ nextField:
 		} else if proto.HasExtension(fieldOpts, annotations.E_Field) {
 			// Otherwise if custom getter set, use the custom getter instead of underlying proto field type.
 			customGetter = parseGoIdent(proto.GetExtension(field.Desc.Options(), annotations.E_Field).(*annotations.FieldOptions).GetSetFlagGetterFunc())
+		}
+		var enumAliasMap *protogen.GoIdent
+		// If field is enum, check if there is an alias map defined for it.
+		if field.Desc.Kind() == protoreflect.EnumKind {
+			enumOpts := field.Enum.Desc.Options()
+			if proto.HasExtension(enumOpts, annotations.E_Enum) {
+				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
+			}
+		}
+		// If field is a wrapped enum, check if there is an alias map defined for it.
+		if field.Desc.Kind() == protoreflect.MessageKind && messageIsWrapper(field.Message) && field.Message.Fields[0].Desc.Kind() == protoreflect.EnumKind {
+			enumOpts := field.Message.Fields[0].Enum.Desc.Options()
+			if proto.HasExtension(enumOpts, annotations.E_Enum) {
+				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
+			}
 		}
 		flagName := field.Desc.Name()
 		if field.Oneof != nil {
@@ -314,7 +361,11 @@ nextField:
 					g.P("for _, v := range val {")
 					// If field is enum slice, we first obtain the string representation for every value,
 					// then use `SetEnumString` and pass value map to return the int32 identifier for the enum.
-					g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(v, ", field.Enum.GoIdent, "_value)")
+					if enumAliasMap != nil {
+						g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(v, ", field.Enum.GoIdent, "_value, ", *enumAliasMap, ")")
+					} else {
+						g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(v, ", field.Enum.GoIdent, "_value)")
+					}
 					g.ifErrNotNil()
 					// Pass the int32 identifier to proto generated function to get the enum value.
 					g.P("m", ".", fieldGoName, " = ", "append(", "m", ".", fieldGoName, ", ", field.Enum.GoIdent, "(enumValue))")
@@ -337,7 +388,11 @@ nextField:
 					if wrappedField.Desc.Kind() == protoreflect.EnumKind {
 						// If field is enum slice, we first obtain the string representation for every value,
 						// then use `SetEnumString` and pass value map to return the int32 identifier for the enum.
-						g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(value, ", wrappedField.Enum.GoIdent, "_value)")
+						if enumAliasMap != nil {
+							g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(value, ", wrappedField.Enum.GoIdent, "_value, ", *enumAliasMap, ")")
+						} else {
+							g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(value, ", wrappedField.Enum.GoIdent, "_value)")
+						}
 						g.ifErrNotNil()
 						// For wrapped message we need to assign the value to the wrapped struct field `Value`.
 						g.P("v := &", field.Message.GoIdent, "{Value: ", wrappedField.Enum.GoIdent, "(enumValue)}")
@@ -413,7 +468,11 @@ nextField:
 				// If field is enum , we first obtain the string representation for the value,
 				// then use `SetEnumString` and pass value map to return the int32 identifier for the enum.
 				if field.Desc.Kind() == protoreflect.EnumKind {
-					g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(val, ", field.Enum.GoIdent, "_value)")
+					if enumAliasMap != nil {
+						g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(val, ", field.Enum.GoIdent, "_value, ", *enumAliasMap, ")")
+					} else {
+						g.P("enumValue, err :=", flagspluginPackage.Ident("SetEnumString"), "(val, ", field.Enum.GoIdent, "_value)")
+					}
 					g.ifErrNotNil()
 					g.P(messageOrOneofIdent, ".", fieldGoName, " = ", field.Enum.GoIdent, "(enumValue)")
 				} else {
