@@ -55,6 +55,27 @@ var testMessagesWithEnums = []struct {
 			"wrapped_customs",
 		},
 	},
+	{
+		name: "alias custom enum value set",
+		arguments: []string{
+			"--custom", "1.0.0",
+			"--customs", "1.0.1,V1_0_1,1.0,unknown",
+			"--wrapped-custom", "UNKNOWN",
+			"--wrapped-customs", "unknown,1.0",
+		},
+		expectedMessage: MessageWithEnums{
+			Custom:         CustomEnum_CUSTOM_V1_0,
+			Customs:        []CustomEnum{CustomEnum_CUSTOM_V1_0_1, CustomEnum_CUSTOM_V1_0_1, CustomEnum_CUSTOM_V1_0, CustomEnum_CUSTOM_UNKNOWN},
+			WrappedCustom:  &CustomEnumValue{Value: CustomEnum_CUSTOM_UNKNOWN},
+			WrappedCustoms: []*CustomEnumValue{{Value: CustomEnum_CUSTOM_UNKNOWN}, {Value: CustomEnum_CUSTOM_V1_0}},
+		},
+		expectedMask: []string{
+			"custom",
+			"customs",
+			"wrapped_custom.value",
+			"wrapped_customs",
+		},
+	},
 }
 
 var testMessagesWithOneofEnums = []struct {
