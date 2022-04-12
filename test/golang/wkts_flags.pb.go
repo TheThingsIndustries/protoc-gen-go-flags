@@ -230,32 +230,23 @@ func PathsFromSelectFlagsForMessageWithWKTs(flags *pflag.FlagSet, prefix string)
 
 // AddSetFlagsForMessageWithWKTs adds flags to select fields in MessageWithWKTs.
 func AddSetFlagsForMessageWithWKTs(flags *pflag.FlagSet, prefix string, hidden bool) {
-	flags.AddFlag(flagsplugin.NewFloat64Flag(flagsplugin.Prefix("double-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("double-value.value", prefix), flagsplugin.Prefix("double-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewFloat64Flag(flagsplugin.Prefix("double-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewFloat64SliceFlag(flagsplugin.Prefix("double-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewFloat32Flag(flagsplugin.Prefix("float-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("float-value.value", prefix), flagsplugin.Prefix("float-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewFloat32Flag(flagsplugin.Prefix("float-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewFloat32SliceFlag(flagsplugin.Prefix("float-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewInt32Flag(flagsplugin.Prefix("int32-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("int32-value.value", prefix), flagsplugin.Prefix("int32-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewInt32Flag(flagsplugin.Prefix("int32-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewInt32SliceFlag(flagsplugin.Prefix("int32-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewInt64Flag(flagsplugin.Prefix("int64-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("int64-value.value", prefix), flagsplugin.Prefix("int64-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewInt64Flag(flagsplugin.Prefix("int64-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewInt64SliceFlag(flagsplugin.Prefix("int64-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewUint32Flag(flagsplugin.Prefix("uint32-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("uint32-value.value", prefix), flagsplugin.Prefix("uint32-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewUint32Flag(flagsplugin.Prefix("uint32-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewUint32SliceFlag(flagsplugin.Prefix("uint32-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewUint64Flag(flagsplugin.Prefix("uint64-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("uint64-value.value", prefix), flagsplugin.Prefix("uint64-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewUint64Flag(flagsplugin.Prefix("uint64-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewUint64SliceFlag(flagsplugin.Prefix("uint64-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("bool-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("bool-value.value", prefix), flagsplugin.Prefix("bool-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("bool-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewBoolSliceFlag(flagsplugin.Prefix("bool-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("string-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("string-value.value", prefix), flagsplugin.Prefix("string-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("string-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewStringSliceFlag(flagsplugin.Prefix("string-values", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewBytesFlag(flagsplugin.Prefix("bytes-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("bytes-value.value", prefix), flagsplugin.Prefix("bytes-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewBytesFlag(flagsplugin.Prefix("bytes-value", prefix), "", flagsplugin.WithHidden(true)))
 	flags.AddFlag(flagsplugin.NewBytesSliceFlag(flagsplugin.Prefix("bytes-values", prefix), "", flagsplugin.WithHidden(hidden)))
 	// FIXME: Skipping EmptyValue because this WKT is currently not supported.
 	// FIXME: Skipping EmptyValues because this repeated WKT is currently not supported.
@@ -277,7 +268,7 @@ func AddSetFlagsForMessageWithWKTs(flags *pflag.FlagSet, prefix string, hidden b
 
 // SetFromFlags sets the MessageWithWKTs message from flags.
 func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("double_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("double_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.DoubleValue = &wrapperspb.DoubleValue{Value: val}
@@ -292,7 +283,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("double_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("float_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("float_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.FloatValue = &wrapperspb.FloatValue{Value: val}
@@ -307,7 +298,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("float_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("int32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("int32_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.Int32Value = &wrapperspb.Int32Value{Value: val}
@@ -322,7 +313,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("int32_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("int64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("int64_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.Int64Value = &wrapperspb.Int64Value{Value: val}
@@ -337,7 +328,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("int64_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("uint32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("uint32_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.Uint32Value = &wrapperspb.UInt32Value{Value: val}
@@ -352,7 +343,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("uint32_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("uint64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("uint64_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.Uint64Value = &wrapperspb.UInt64Value{Value: val}
@@ -367,7 +358,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("uint64_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.BoolValue = &wrapperspb.BoolValue{Value: val}
@@ -382,7 +373,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("bool_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("string_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.StringValue = &wrapperspb.StringValue{Value: val}
@@ -397,7 +388,7 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 		}
 		paths = append(paths, flagsplugin.Prefix("string_values", prefix))
 	}
-	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("bytes_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("bytes_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		m.BytesValue = &wrapperspb.BytesValue{Value: val}
@@ -575,24 +566,15 @@ func PathsFromSelectFlagsForMessageWithOneofWKTs(flags *pflag.FlagSet, prefix st
 
 // AddSetFlagsForMessageWithOneofWKTs adds flags to select fields in MessageWithOneofWKTs.
 func AddSetFlagsForMessageWithOneofWKTs(flags *pflag.FlagSet, prefix string, hidden bool) {
-	flags.AddFlag(flagsplugin.NewFloat64Flag(flagsplugin.Prefix("value.double-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.double-value.value", prefix), flagsplugin.Prefix("value.double-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewFloat32Flag(flagsplugin.Prefix("value.float-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.float-value.value", prefix), flagsplugin.Prefix("value.float-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewInt32Flag(flagsplugin.Prefix("value.int32-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.int32-value.value", prefix), flagsplugin.Prefix("value.int32-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewInt64Flag(flagsplugin.Prefix("value.int64-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.int64-value.value", prefix), flagsplugin.Prefix("value.int64-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewUint32Flag(flagsplugin.Prefix("value.uint32-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.uint32-value.value", prefix), flagsplugin.Prefix("value.uint32-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewUint64Flag(flagsplugin.Prefix("value.uint64-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.uint64-value.value", prefix), flagsplugin.Prefix("value.uint64-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("value.bool-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.bool-value.value", prefix), flagsplugin.Prefix("value.bool-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value.string-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.string-value.value", prefix), flagsplugin.Prefix("value.string-value", prefix), flagsplugin.WithHidden(hidden))
-	flags.AddFlag(flagsplugin.NewBytesFlag(flagsplugin.Prefix("value.bytes-value.value", prefix), "", flagsplugin.WithHidden(true)))
-	flagsplugin.AddAlias(flags, flagsplugin.Prefix("value.bytes-value.value", prefix), flagsplugin.Prefix("value.bytes-value", prefix), flagsplugin.WithHidden(hidden))
+	flags.AddFlag(flagsplugin.NewFloat64Flag(flagsplugin.Prefix("value.double-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewFloat32Flag(flagsplugin.Prefix("value.float-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewInt32Flag(flagsplugin.Prefix("value.int32-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewInt64Flag(flagsplugin.Prefix("value.int64-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewUint32Flag(flagsplugin.Prefix("value.uint32-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewUint64Flag(flagsplugin.Prefix("value.uint64-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("value.bool-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewStringFlag(flagsplugin.Prefix("value.string-value", prefix), "", flagsplugin.WithHidden(true)))
+	flags.AddFlag(flagsplugin.NewBytesFlag(flagsplugin.Prefix("value.bytes-value", prefix), "", flagsplugin.WithHidden(true)))
 	// FIXME: Skipping EmptyValue because this WKT is currently not supported.
 	flags.AddFlag(flagsplugin.NewTimestampFlag(flagsplugin.Prefix("value.timestamp-value", prefix), "", flagsplugin.WithHidden(hidden)))
 	flags.AddFlag(flagsplugin.NewDurationFlag(flagsplugin.Prefix("value.duration-value", prefix), "", flagsplugin.WithHidden(hidden)))
@@ -605,7 +587,7 @@ func AddSetFlagsForMessageWithOneofWKTs(flags *pflag.FlagSet, prefix string, hid
 
 // SetFromFlags sets the MessageWithOneofWKTs message from flags.
 func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("value.double_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat64(flags, flagsplugin.Prefix("value.double_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_DoubleValue{}
@@ -613,7 +595,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.double_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("value.float_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetFloat32(flags, flagsplugin.Prefix("value.float_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_FloatValue{}
@@ -621,7 +603,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.float_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.int32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt32(flags, flagsplugin.Prefix("value.int32_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_Int32Value{}
@@ -629,7 +611,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.int32_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.int64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetInt64(flags, flagsplugin.Prefix("value.int64_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_Int64Value{}
@@ -637,7 +619,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.int64_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.uint32_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint32(flags, flagsplugin.Prefix("value.uint32_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_Uint32Value{}
@@ -645,7 +627,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.uint32_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.uint64_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetUint64(flags, flagsplugin.Prefix("value.uint64_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_Uint64Value{}
@@ -653,7 +635,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.uint64_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("value.bool_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("value.bool_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_BoolValue{}
@@ -661,7 +643,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.bool_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.string_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetString(flags, flagsplugin.Prefix("value.string_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_StringValue{}
@@ -669,7 +651,7 @@ func (m *MessageWithOneofWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string)
 		paths = append(paths, flagsplugin.Prefix("value.string_value", prefix))
 		m.Value = ov
 	}
-	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.bytes_value.value", prefix)); err != nil {
+	if val, changed, err := flagsplugin.GetBytes(flags, flagsplugin.Prefix("value.bytes_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
 		ov := &MessageWithOneofWKTs_BytesValue{}

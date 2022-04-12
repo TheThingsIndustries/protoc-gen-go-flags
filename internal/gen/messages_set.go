@@ -197,6 +197,9 @@ nextField:
 					// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
 					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
 					continue nextField
+				} else if messageIsWKT(field.Message) {
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), "(true)", "))")
+					continue nextField
 				}
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), "", `, flagspluginPackage.Ident("WithHidden"), "(true)", "))")
 				// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
@@ -503,8 +506,12 @@ nextField:
 					g.P("paths = append(paths, setPaths...)")
 					g.P("}")
 				case messageIsWrapper(field.Message):
-					// If the message is wrapper we get value directly from the {fieldName}.value flag.
-					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(fieldName)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix)); err != nil {`)
+					if messageIsWKT(field.Message) {
+						g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(fieldName)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
+					} else {
+						// If the message is wrapper we get value directly from the {fieldName}.value flag.
+						g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(fieldName)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix)); err != nil {`)
+					}
 					g.P("return nil, err")
 					g.P("} else if changed", "{")
 					if field.Oneof != nil {
