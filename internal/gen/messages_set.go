@@ -198,7 +198,7 @@ nextField:
 					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
 					continue nextField
 				} else if messageIsWKT(field.Message) {
-					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), "(true)", "))")
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					continue nextField
 				}
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), "", `, flagspluginPackage.Ident("WithHidden"), "(true)", "))")
@@ -445,7 +445,7 @@ nextField:
 			g.P("} else if changed", "{")
 			if field.Oneof != nil {
 				// If field is in a oneof, initialize an appropriate proto oneof type.
-				g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
+				g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
 			}
 			// Assign value to the underlying field of the proto oneof type.
 			if nullable {
@@ -466,7 +466,7 @@ nextField:
 				g.P("} else if changed", "{")
 				// If field is in a oneof, initialize an appropriate proto oneof type.
 				if field.Oneof != nil {
-					g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
+					g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
 				}
 				// If field is enum , we first obtain the string representation for the value,
 				// then use `SetEnumString` and pass value map to return the int32 identifier for the enum.
@@ -494,10 +494,10 @@ nextField:
 					// If field message has flag setter, we first check if any flags for the message are set.
 					g.P("if changed := ", flagspluginPackage.Ident("IsAnyPrefixSet(flags, "), flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); changed {`)
 					if field.Oneof != nil {
-						g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
+						g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
 					}
 					if nullable {
-						g.P(messageOrOneofIdent, ".", fieldGoName, " =&", field.Message.GoIdent.GoName, "{}")
+						g.P(messageOrOneofIdent, ".", fieldGoName, " =&", field.Message.GoIdent, "{}")
 					}
 					// If any flags are set, we use the message setter to set the field, and obtain the set paths to return.
 					g.P("if setPaths, err := ", messageOrOneofIdent, ".", fieldGoName, ".SetFromFlags(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
@@ -515,7 +515,7 @@ nextField:
 					g.P("return nil, err")
 					g.P("} else if changed", "{")
 					if field.Oneof != nil {
-						g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
+						g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
 					}
 					g.P(messageOrOneofIdent, ".", fieldGoName, " = &", field.Message.GoIdent, "{Value: val}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
@@ -530,7 +530,7 @@ nextField:
 					g.P("return nil, err")
 					g.P("} else if changed", "{")
 					if field.Oneof != nil {
-						g.P(messageOrOneofIdent, " := &", field.GoIdent.GoName, "{}")
+						g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
 					}
 					g.P(messageOrOneofIdent, ".", fieldGoName, " = ", g.readWKTValue(field, field.Message, "val"))
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
