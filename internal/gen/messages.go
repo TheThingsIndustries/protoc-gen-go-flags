@@ -94,11 +94,12 @@ func flagFromCustomType(field *protogen.Field) *protogen.GoIdent {
 			customtype := proto.GetExtension(field.Desc.Options(), gogoproto.E_Customtype).(string)
 			i := strings.LastIndex(customtype, ".")
 			// Force custom getter to be of type `/path/to/customtype.Get{CustomType}`.
-			customGetter := customtype[:i+1] + "Get" + customtype[i+1:]
+			customGetter := customtype[:i+1] + Params.CustomTypeGetterPrefix + customtype[i+1:]
 			// Append slice if the field is repeated.
 			if field.Desc.IsList() {
-				customGetter = customGetter + "Slice"
+				customGetter += "Slice"
 			}
+			customGetter += Params.CustomTypeGetterSuffix
 			return parseGoIdent(customGetter)
 		}
 	}

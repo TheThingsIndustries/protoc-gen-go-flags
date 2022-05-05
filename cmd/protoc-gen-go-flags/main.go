@@ -22,6 +22,8 @@ func main() {
 
 	var flags flag.FlagSet
 	flags.StringVar(&plugin.Params.Lang, "lang", "go", "language (go or gogo)")
+	flags.StringVar(&plugin.Params.CustomTypeGetterPrefix, "customtype.getter-prefix", "Get", "prefix for customtype getter func")
+	flags.StringVar(&plugin.Params.CustomTypeGetterSuffix, "customtype.getter-suffix", "", "suffix for customtype getter func")
 
 	protogen.Options{
 		ParamFunc: flags.Set,
