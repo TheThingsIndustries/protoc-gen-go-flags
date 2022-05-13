@@ -156,7 +156,9 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 		paths = append(paths, flagsplugin.Prefix("customs", prefix))
 	}
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("wrapped_custom", prefix)); changed {
-		m.WrappedCustom = &CustomEnumValue{}
+		if m.WrappedCustom == nil {
+			m.WrappedCustom = &CustomEnumValue{}
+		}
 		if setPaths, err := m.WrappedCustom.SetFromFlags(flags, flagsplugin.Prefix("wrapped_custom", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -248,7 +250,9 @@ func (m *MessageWithOneofEnums) SetFromFlags(flags *pflag.FlagSet, prefix string
 	}
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("value.wrapped_custom", prefix)); changed {
 		ov := &MessageWithOneofEnums_WrappedCustom{}
-		ov.WrappedCustom = &CustomEnumValue{}
+		if ov.WrappedCustom == nil {
+			ov.WrappedCustom = &CustomEnumValue{}
+		}
 		if setPaths, err := ov.WrappedCustom.SetFromFlags(flags, flagsplugin.Prefix("value.wrapped_custom", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -353,7 +357,9 @@ func AddSetFlagsForMessageWithEmbeddedMessageDefinitionWithEnums(flags *pflag.Fl
 // SetFromFlags sets the MessageWithEmbeddedMessageDefinitionWithEnums message from flags.
 func (m *MessageWithEmbeddedMessageDefinitionWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("test_message_field", prefix)); changed {
-		m.TestMessageField = &MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum{}
+		if m.TestMessageField == nil {
+			m.TestMessageField = &MessageWithEmbeddedMessageDefinitionWithEnums_EmbeddedMessageDefinitionWithEnum{}
+		}
 		if setPaths, err := m.TestMessageField.SetFromFlags(flags, flagsplugin.Prefix("test_message_field", prefix)); err != nil {
 			return nil, err
 		} else {

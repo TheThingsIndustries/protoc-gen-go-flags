@@ -253,7 +253,9 @@ func AddSetFlagsForMessageWithNullable(flags *pflag.FlagSet, prefix string, hidd
 // SetFromFlags sets the MessageWithNullable message from flags.
 func (m *MessageWithNullable) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
-		m.Sub = &SubMessage{}
+		if m.Sub == nil {
+			m.Sub = &SubMessage{}
+		}
 		if setPaths, err := m.Sub.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -262,7 +264,9 @@ func (m *MessageWithNullable) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 	}
 	// FIXME: Skipping Subs because it does not seem to implement AddSetFlags.
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
-		m.OtherSub = &SubMessageWithoutMarshalers{}
+		if m.OtherSub == nil {
+			m.OtherSub = &SubMessageWithoutMarshalers{}
+		}
 		if setPaths, err := m.OtherSub.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -315,7 +319,9 @@ func AddSetFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string, hidd
 // SetFromFlags sets the MessageWithEmbedded message from flags.
 func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
-		m.Sub = &SubMessage{}
+		if m.Sub == nil {
+			m.Sub = &SubMessage{}
+		}
 		if setPaths, err := m.Sub.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -323,7 +329,9 @@ func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 		}
 	}
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
-		m.OtherSub = &SubMessageWithoutMarshalers{}
+		if m.OtherSub == nil {
+			m.OtherSub = &SubMessageWithoutMarshalers{}
+		}
 		if setPaths, err := m.OtherSub.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -375,7 +383,9 @@ func AddSetFlagsForMessageWithNullableEmbedded(flags *pflag.FlagSet, prefix stri
 // SetFromFlags sets the MessageWithNullableEmbedded message from flags.
 func (m *MessageWithNullableEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
-		m.Sub = &SubMessage{}
+		if m.Sub == nil {
+			m.Sub = &SubMessage{}
+		}
 		if setPaths, err := m.Sub.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -383,7 +393,9 @@ func (m *MessageWithNullableEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix 
 		}
 	}
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
-		m.OtherSub = &SubMessageWithoutMarshalers{}
+		if m.OtherSub == nil {
+			m.OtherSub = &SubMessageWithoutMarshalers{}
+		}
 		if setPaths, err := m.OtherSub.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err
 		} else {

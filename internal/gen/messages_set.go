@@ -497,7 +497,9 @@ nextField:
 						g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
 					}
 					if nullable {
+						g.P("if ", messageOrOneofIdent, ".", fieldGoName, " == nil {")
 						g.P(messageOrOneofIdent, ".", fieldGoName, " =&", field.Message.GoIdent, "{}")
+						g.P("}")
 					}
 					// If any flags are set, we use the message setter to set the field, and obtain the set paths to return.
 					g.P("if setPaths, err := ", messageOrOneofIdent, ".", fieldGoName, ".SetFromFlags(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)

@@ -312,7 +312,9 @@ func AddSetFlagsForMessageWithEmbedded(flags *pflag.FlagSet, prefix string, hidd
 // SetFromFlags sets the MessageWithEmbedded message from flags.
 func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("sub", prefix)); changed {
-		m.SubMessage = &SubMessage{}
+		if m.SubMessage == nil {
+			m.SubMessage = &SubMessage{}
+		}
 		if setPaths, err := m.SubMessage.SetFromFlags(flags, flagsplugin.Prefix("sub", prefix)); err != nil {
 			return nil, err
 		} else {
@@ -320,7 +322,9 @@ func (m *MessageWithEmbedded) SetFromFlags(flags *pflag.FlagSet, prefix string) 
 		}
 	}
 	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("other_sub", prefix)); changed {
-		m.SubMessageWithoutMarshalers = &SubMessageWithoutMarshalers{}
+		if m.SubMessageWithoutMarshalers == nil {
+			m.SubMessageWithoutMarshalers = &SubMessageWithoutMarshalers{}
+		}
 		if setPaths, err := m.SubMessageWithoutMarshalers.SetFromFlags(flags, flagsplugin.Prefix("other_sub", prefix)); err != nil {
 			return nil, err
 		} else {
