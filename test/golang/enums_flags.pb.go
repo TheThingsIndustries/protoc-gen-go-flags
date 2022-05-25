@@ -124,12 +124,13 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("regulars", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, v := range val {
+		m.Regulars = make([]RegularEnum, len(val))
+		for i, v := range val {
 			enumValue, err := flagsplugin.SetEnumString(v, RegularEnum_value)
 			if err != nil {
 				return nil, err
 			}
-			m.Regulars = append(m.Regulars, RegularEnum(enumValue))
+			m.Regulars[i] = RegularEnum(enumValue)
 		}
 		paths = append(paths, flagsplugin.Prefix("regulars", prefix))
 	}
@@ -146,12 +147,13 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("customs", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, v := range val {
+		m.Customs = make([]CustomEnum, len(val))
+		for i, v := range val {
 			enumValue, err := flagsplugin.SetEnumString(v, CustomEnum_value, enum.CustomEnum_customvalue)
 			if err != nil {
 				return nil, err
 			}
-			m.Customs = append(m.Customs, CustomEnum(enumValue))
+			m.Customs[i] = CustomEnum(enumValue)
 		}
 		paths = append(paths, flagsplugin.Prefix("customs", prefix))
 	}

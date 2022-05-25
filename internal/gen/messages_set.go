@@ -361,7 +361,8 @@ nextField:
 				g.P("return nil, err")
 				g.P("} else if changed", "{")
 				if field.Desc.Kind() == protoreflect.EnumKind {
-					g.P("for _, v := range val {")
+					g.P("m", ".", fieldGoName, " = make([]", field.Enum.GoIdent, ", len(val))")
+					g.P("for i, v := range val {")
 					// If field is enum slice, we first obtain the string representation for every value,
 					// then use `SetEnumString` and pass value map to return the int32 identifier for the enum.
 					if enumAliasMap != nil {
@@ -371,7 +372,7 @@ nextField:
 					}
 					g.ifErrNotNil()
 					// Pass the int32 identifier to proto generated function to get the enum value.
-					g.P("m", ".", fieldGoName, " = ", "append(", "m", ".", fieldGoName, ", ", field.Enum.GoIdent, "(enumValue))")
+					g.P("m", ".", fieldGoName, "[i] = ", field.Enum.GoIdent, "(enumValue)")
 					g.P("}")
 				} else {
 					// Otherwise just assign the slice value to the struct field.
