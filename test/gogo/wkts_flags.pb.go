@@ -275,9 +275,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetFloat64Slice(flags, flagsplugin.Prefix("double_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.DoubleValue{Value: value}
-			m.DoubleValues = append(m.DoubleValues, v)
+		m.DoubleValues = make([]*types.DoubleValue, len(val))
+		for i, value := range val {
+			m.DoubleValues[i] = &types.DoubleValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("double_values", prefix))
 	}
@@ -290,9 +290,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetFloat32Slice(flags, flagsplugin.Prefix("float_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.FloatValue{Value: value}
-			m.FloatValues = append(m.FloatValues, v)
+		m.FloatValues = make([]*types.FloatValue, len(val))
+		for i, value := range val {
+			m.FloatValues[i] = &types.FloatValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("float_values", prefix))
 	}
@@ -305,9 +305,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetInt32Slice(flags, flagsplugin.Prefix("int32_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.Int32Value{Value: value}
-			m.Int32Values = append(m.Int32Values, v)
+		m.Int32Values = make([]*types.Int32Value, len(val))
+		for i, value := range val {
+			m.Int32Values[i] = &types.Int32Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("int32_values", prefix))
 	}
@@ -320,9 +320,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetInt64Slice(flags, flagsplugin.Prefix("int64_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.Int64Value{Value: value}
-			m.Int64Values = append(m.Int64Values, v)
+		m.Int64Values = make([]*types.Int64Value, len(val))
+		for i, value := range val {
+			m.Int64Values[i] = &types.Int64Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("int64_values", prefix))
 	}
@@ -335,9 +335,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetUint32Slice(flags, flagsplugin.Prefix("uint32_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.UInt32Value{Value: value}
-			m.Uint32Values = append(m.Uint32Values, v)
+		m.Uint32Values = make([]*types.UInt32Value, len(val))
+		for i, value := range val {
+			m.Uint32Values[i] = &types.UInt32Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("uint32_values", prefix))
 	}
@@ -350,9 +350,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetUint64Slice(flags, flagsplugin.Prefix("uint64_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.UInt64Value{Value: value}
-			m.Uint64Values = append(m.Uint64Values, v)
+		m.Uint64Values = make([]*types.UInt64Value, len(val))
+		for i, value := range val {
+			m.Uint64Values[i] = &types.UInt64Value{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("uint64_values", prefix))
 	}
@@ -365,9 +365,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetBoolSlice(flags, flagsplugin.Prefix("bool_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.BoolValue{Value: value}
-			m.BoolValues = append(m.BoolValues, v)
+		m.BoolValues = make([]*types.BoolValue, len(val))
+		for i, value := range val {
+			m.BoolValues[i] = &types.BoolValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("bool_values", prefix))
 	}
@@ -380,9 +380,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("string_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.StringValue{Value: value}
-			m.StringValues = append(m.StringValues, v)
+		m.StringValues = make([]*types.StringValue, len(val))
+		for i, value := range val {
+			m.StringValues[i] = &types.StringValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("string_values", prefix))
 	}
@@ -395,9 +395,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetBytesSlice(flags, flagsplugin.Prefix("bytes_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := &types.BytesValue{Value: value}
-			m.BytesValues = append(m.BytesValues, v)
+		m.BytesValues = make([]*types.BytesValue, len(val))
+		for i, value := range val {
+			m.BytesValues[i] = &types.BytesValue{Value: value}
 		}
 		paths = append(paths, flagsplugin.Prefix("bytes_values", prefix))
 	}
@@ -412,9 +412,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetTimestampSlice(flags, flagsplugin.Prefix("timestamp_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := gogo.SetTimestamp(value)
-			m.TimestampValues = append(m.TimestampValues, v)
+		m.TimestampValues = make([]*types.Timestamp, len(val))
+		for i, value := range val {
+			m.TimestampValues[i] = gogo.SetTimestamp(value)
 		}
 		paths = append(paths, flagsplugin.Prefix("timestamp_values", prefix))
 	}
@@ -427,9 +427,9 @@ func (m *MessageWithWKTs) SetFromFlags(flags *pflag.FlagSet, prefix string) (pat
 	if val, changed, err := flagsplugin.GetDurationSlice(flags, flagsplugin.Prefix("duration_values", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
-			v := gogo.SetDuration(value)
-			m.DurationValues = append(m.DurationValues, v)
+		m.DurationValues = make([]*types.Duration, len(val))
+		for i, value := range val {
+			m.DurationValues[i] = gogo.SetDuration(value)
 		}
 		paths = append(paths, flagsplugin.Prefix("duration_values", prefix))
 	}

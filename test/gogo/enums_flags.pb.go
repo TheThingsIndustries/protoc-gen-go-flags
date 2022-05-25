@@ -168,13 +168,13 @@ func (m *MessageWithEnums) SetFromFlags(flags *pflag.FlagSet, prefix string) (pa
 	if val, changed, err := flagsplugin.GetStringSlice(flags, flagsplugin.Prefix("wrapped_customs", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		for _, value := range val {
+		m.WrappedCustoms = make([]*CustomEnumValue, len(val))
+		for i, value := range val {
 			enumValue, err := flagsplugin.SetEnumString(value, CustomEnum_value, enum.CustomEnum_customvalue)
 			if err != nil {
 				return nil, err
 			}
-			v := &CustomEnumValue{Value: CustomEnum(enumValue)}
-			m.WrappedCustoms = append(m.WrappedCustoms, v)
+			m.WrappedCustoms[i] = &CustomEnumValue{Value: CustomEnum(enumValue)}
 		}
 		paths = append(paths, flagsplugin.Prefix("wrapped_customs", prefix))
 	}

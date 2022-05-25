@@ -387,7 +387,8 @@ nextField:
 					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(wrappedField)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
 					g.P("} else if changed", "{")
-					g.P("for _, value := range val {")
+					g.P("m", ".", fieldGoName, " = make([]", ifThenElse(fieldIsNullable(field), "*", ""), field.Message.GoIdent, ", len(val))")
+					g.P("for i, value := range val {")
 					if wrappedField.Desc.Kind() == protoreflect.EnumKind {
 						// If field is enum slice, we first obtain the string representation for every value,
 						// then use `SetEnumString` and pass value map to return the int32 identifier for the enum.
@@ -398,13 +399,11 @@ nextField:
 						}
 						g.ifErrNotNil()
 						// For wrapped message we need to assign the value to the wrapped struct field `Value`.
-						g.P("v := &", field.Message.GoIdent, "{Value: ", wrappedField.Enum.GoIdent, "(enumValue)}")
+						g.P("m.", fieldGoName, "[i] = &", field.Message.GoIdent, "{Value: ", wrappedField.Enum.GoIdent, "(enumValue)}")
 					} else {
 						// For wrapped message we need to assign the value to the wrapped struct field `Value`.
-						g.P("v := &", field.Message.GoIdent, "{Value: value}")
+						g.P("m.", fieldGoName, "[i] = &", field.Message.GoIdent, "{Value: value}")
 					}
-					// We append each struct to a struct slice.
-					g.P("m.", fieldGoName, " = ", "append(", "m", ".", fieldGoName, ", v)")
 					g.P("}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
@@ -417,10 +416,10 @@ nextField:
 					g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForWKT(field.Message)+"Slice"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
 					g.P("} else if changed", "{")
-					g.P("for _, value := range val {")
+					g.P("m", ".", fieldGoName, " = make([]", ifThenElse(fieldIsNullable(field), "*", ""), field.Message.GoIdent, ", len(val))")
+					g.P("for i, value := range val {")
 					// For every WKT value in WKT slice we convert it to the timestamp proto type.
-					g.P("v := ", g.readWKTValue(field, field.Message, "value"))
-					g.P("m.", fieldGoName, " = ", "append(", "m", ".", fieldGoName, ", v)")
+					g.P("m.", fieldGoName, "[i] = ", g.readWKTValue(field, field.Message, "value"))
 					g.P("}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
