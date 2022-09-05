@@ -25,11 +25,12 @@ func (g *generator) messageHasSetFlags(message *protogen.Message, visited ...*pr
 	for _, field := range message.Fields {
 		// If the field has the (thethings.flags.field) option, and set is set, we need to generate set flags for the message.
 		fieldOpts := field.Desc.Options().(*descriptorpb.FieldOptions)
-		if proto.HasExtension(fieldOpts, annotations.E_Field) {
-			if fieldExt, ok := proto.GetExtension(fieldOpts, annotations.E_Field).(*annotations.FieldOptions); ok {
-				if fieldExt.Set == nil || fieldExt.GetSet() {
-					generateSetFlags = true
-				}
+		if !proto.HasExtension(fieldOpts, annotations.E_Field) {
+			continue
+		}
+		if fieldExt, ok := proto.GetExtension(fieldOpts, annotations.E_Field).(*annotations.FieldOptions); ok {
+			if fieldExt.Set == nil || fieldExt.GetSet() {
+				generateSetFlags = true
 			}
 		}
 	}
@@ -37,25 +38,54 @@ func (g *generator) messageHasSetFlags(message *protogen.Message, visited ...*pr
 	// Finally, the set field can still override to true or false if explicitly set.
 	messageOpts := message.Desc.Options().(*descriptorpb.MessageOptions)
 	if proto.HasExtension(messageOpts, annotations.E_Message) {
-		if messageExt, ok := proto.GetExtension(messageOpts, annotations.E_Message).(*annotations.MessageOptions); ok {
-			if messageExt.Set != nil {
-				generateSetFlags = *messageExt.Set
-			}
+		if messageExt, ok := proto.GetExtension(messageOpts, annotations.E_Message).(*annotations.MessageOptions); ok && messageExt.Set != nil {
+			generateSetFlags = *messageExt.Set
 		}
 	}
 
 	return generateSetFlags
 }
 
+func (g *generator) fieldHasSemanticalFlags(message *protogen.Message, field *protogen.Field) bool {
+	// Semantical flags are only defined for messages.
+	if field.Desc.Kind() != protoreflect.MessageKind {
+		return false
+	}
+
+	var generateSemanticalFlags bool
+
+	// The `semantical` flag can be set by the message and/or the field itself.
+	// The field overrides the message flags.
+	messageOpts := message.Desc.Options().(*descriptorpb.MessageOptions)
+	if proto.HasExtension(messageOpts, annotations.E_Message) {
+		if messageExt, ok := proto.GetExtension(messageOpts, annotations.E_Message).(*annotations.MessageOptions); ok && messageExt.Semantical != nil {
+			generateSemanticalFlags = *messageExt.Semantical
+		}
+	}
+
+	fieldOpts := field.Desc.Options().(*descriptorpb.FieldOptions)
+	if proto.HasExtension(fieldOpts, annotations.E_Field) {
+		if fieldExt, ok := proto.GetExtension(fieldOpts, annotations.E_Field).(*annotations.FieldOptions); ok && fieldExt.Semantical != nil {
+			generateSemanticalFlags = *fieldExt.Semantical
+		}
+	}
+
+	return generateSemanticalFlags
+}
+
 func (g *generator) genMessageSetFlags(message *protogen.Message) {
 	g.P("// AddSetFlagsFor", message.GoIdent, " adds flags to select fields in ", message.GoIdent, ".")
 	g.P("func AddSetFlagsFor", message.GoIdent, "(flags *", pflagPackage.Ident("FlagSet"), ", prefix string, hidden bool) ", " {")
+
 nextField:
 	for _, field := range message.Fields {
 		_, setFlag, hidden := g.getFieldFlagBoolOptions(field)
 		if setFlag != nil && !*setFlag {
 			continue nextField
 		}
+
+		semantical := g.fieldHasSemanticalFlags(message, field)
+
 		var customFlagType *protogen.GoIdent
 		fieldOpts := field.Desc.Options()
 		if proto.HasExtension(fieldOpts, annotations.E_Field) {
@@ -82,6 +112,7 @@ nextField:
 		if field.Oneof != nil {
 			flagName = flagNameReplacer.Replace(string(field.Oneof.Desc.Name())) + "." + flagName
 		}
+
 		if field.Desc.IsMap() {
 			// If the field is a map, the field type is a MapEntry message.
 			// In the MapEntry message, the first field is the key, and the second field is the value.
@@ -211,7 +242,11 @@ nextField:
 				}
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForWKT(field.Message)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			default:
-				g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
+				if semantical {
+					g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+				} else {
+					g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
+				}
 			}
 		}
 	}
@@ -222,12 +257,16 @@ nextField:
 func (g *generator) genMessageSetterFromFlags(message *protogen.Message) {
 	g.P("// SetFromFlags sets the ", message.GoIdent, " message from flags.")
 	g.P("func (m *", message.GoIdent, ") SetFromFlags(flags *", pflagPackage.Ident("FlagSet"), ", prefix string) (paths []string, err error) {")
+
 nextField:
 	for _, field := range message.Fields {
 		_, setFlag, _ := g.getFieldFlagBoolOptions(field)
 		if setFlag != nil && !*setFlag {
 			continue nextField
 		}
+
+		semantical := g.fieldHasSemanticalFlags(message, field)
+
 		var (
 			fieldGoName  interface{} = fieldGoName(field)
 			customtype               = fieldCustomType(field)
@@ -262,6 +301,7 @@ nextField:
 			// If field is oneof, add oneof field name to flag name.
 			flagName = field.Oneof.Desc.Name() + "." + flagName
 		}
+
 		if field.Desc.IsMap() {
 			// If custom getter is set for the field, use it to retrieve the flag value.
 			if customGetter != nil {
@@ -538,7 +578,16 @@ nextField:
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 
 				default:
-					g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
+					if semantical {
+						g.P("if _, changed, err := ", flagspluginPackage.Ident("GetBool"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, field.Desc.Name(), `", prefix)); err != nil {`)
+						g.P("return nil, err")
+						g.P("} else if changed {")
+						g.P("m.", fieldGoName, " = &", field.Message.GoIdent, "{}")
+						g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, field.Desc.Name(), `", prefix))`)
+						g.P("}")
+					} else {
+						g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
+					}
 					continue nextField
 				}
 			}
