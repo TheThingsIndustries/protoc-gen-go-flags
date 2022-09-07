@@ -1,0 +1,27 @@
+// Copyright © 2021 The Things Industries B.V.
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+import "annotations.proto";
+import "internal/gogoproto/gogo.proto";
+
+package thethings.flags.test;
+
+option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
+
+message NonSemantic {
+  option (thethings.flags.message) = { select: false, set: true, semantical: true };
+
+  message Semantic {
+  }
+
+  Semantic semantic = 1 [
+    (thethings.flags.field) = { select: false } 
+  ];
+
+  Semantic overruled_semantic = 2 [
+    (thethings.flags.field) = { select: false, semantical: false }
+  ];
+}
+
