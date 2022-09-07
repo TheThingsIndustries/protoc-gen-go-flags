@@ -25,3 +25,18 @@ message NonSemantic {
   ];
 }
 
+message OneOf {
+  option (thethings.flags.message) = { select: false, set: true, semantical: true };
+  message Semantic {
+  }
+
+  message NonSemantic {
+    bool boolean = 1;
+  }
+
+  oneof option {
+    Semantic semantic = 1;
+    NonSemantic non_semantic = 2;
+  }
+}
+

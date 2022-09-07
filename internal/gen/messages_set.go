@@ -579,16 +579,20 @@ nextField:
 
 				default:
 					if semantical {
-						g.P("if _, changed, err := ", flagspluginPackage.Ident("GetBool"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, field.Desc.Name(), `", prefix)); err != nil {`)
+						g.P("if _, changed, err := ", flagspluginPackage.Ident("GetBool"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 						g.P("return nil, err")
 						g.P("} else if changed {")
-						g.P("m.", fieldGoName, " = &", field.Message.GoIdent, "{}")
-						g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, field.Desc.Name(), `", prefix))`)
-						g.P("}")
+						// If field is in a oneof, initialize an appropriate proto oneof type.
+						if field.Oneof != nil {
+							g.P(messageOrOneofIdent, " := &", field.Message.GoIdent, "_{}")
+						} else {
+							g.P("m.", fieldGoName, " = &", field.Message.GoIdent, "{}")
+						}
+						g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					} else {
 						g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
+						continue nextField
 					}
-					continue nextField
 				}
 			}
 		}
