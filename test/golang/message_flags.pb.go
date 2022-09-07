@@ -28,3 +28,28 @@ func (m *NonSemantic) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths [
 	// FIXME: Skipping OverruledSemantic because it does not seem to implement AddSetFlags.
 	return paths, nil
 }
+
+// AddSetFlagsForOneOf adds flags to select fields in OneOf.
+func AddSetFlagsForOneOf(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("option.semantic", prefix), "", flagsplugin.WithHidden(hidden)))
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("option.non-semantic", prefix), "", flagsplugin.WithHidden(hidden)))
+}
+
+// SetFromFlags sets the OneOf message from flags.
+func (m *OneOf) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
+	if _, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("option.semantic", prefix)); err != nil {
+		return nil, err
+	} else if changed {
+		ov := &OneOf_Semantic_{}
+		paths = append(paths, flagsplugin.Prefix("option.semantic", prefix))
+		m.Option = ov
+	}
+	if _, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("option.non_semantic", prefix)); err != nil {
+		return nil, err
+	} else if changed {
+		ov := &OneOf_NonSemantic_{}
+		paths = append(paths, flagsplugin.Prefix("option.non_semantic", prefix))
+		m.Option = ov
+	}
+	return paths, nil
+}
