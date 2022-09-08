@@ -10,33 +10,41 @@ package thethings.flags.test;
 
 option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
-message NonSemantic {
+message SemanticalMessage {
   option (thethings.flags.message) = { select: false, set: true, semantical: true };
 
-  message Semantic {
+  message Empty {
+    option (thethings.flags.message) = { select: false, set: true};
   }
 
-  Semantic semantic = 1 [
-    (thethings.flags.field) = { select: false } 
+  message NonEmpty {
+    option (thethings.flags.message) = { select: false, set: true};
+    
+    bool bool_value = 1;
+  }
+
+  Empty empty = 1;
+
+  Empty empty_overruled = 2 [
+    (thethings.flags.field) = { semantical: false }
   ];
 
-  Semantic overruled_semantic = 2 [
-    (thethings.flags.field) = { select: false, semantical: false }
-  ];
+  NonEmpty non_empty = 3;
 }
 
-message OneOf {
+message SemanticalOneOfMessage {
   option (thethings.flags.message) = { select: false, set: true, semantical: true };
-  message Semantic {
+  message Empty {
   }
 
-  message NonSemantic {
-    bool boolean = 1;
+  message NonEmpty {
+    option (thethings.flags.message) = { select: false, set: true };
+    bool bool_value = 1;
   }
 
   oneof option {
-    Semantic semantic = 1;
-    NonSemantic non_semantic = 2;
+    Empty semantical = 1;
+    NonEmpty alternative = 2;
   }
 }
 

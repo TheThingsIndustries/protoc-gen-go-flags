@@ -10,56 +10,102 @@ import (
 var testMessagesWithSemanticalMeaning = []struct {
 	name            string
 	arguments       []string
-	expectedMessage NonSemantic
+	expectedMessage SemanticalMessage
 	expectedMask    []string
 }{
 	{
 		name:      "exists",
-		arguments: []string{"--semantic"},
-		expectedMessage: NonSemantic{
-			Semantic: &NonSemantic_Semantic{},
+		arguments: []string{"--empty"},
+		expectedMessage: SemanticalMessage{
+			Empty: &SemanticalMessage_Empty{},
 		},
-		expectedMask: []string{"semantic"},
+		expectedMask: []string{"empty"},
 	},
 	{
 		name:      "doesn't exist",
 		arguments: []string{},
-		expectedMessage: NonSemantic{
-			Semantic: nil,
+		expectedMessage: SemanticalMessage{
+			Empty:          nil,
+			EmptyOverruled: nil,
+			NonEmpty:       nil,
 		},
 		expectedMask: nil,
+	},
+	{
+		name:      "overruled semantical",
+		arguments: []string{"--empty_overruled"},
+		expectedMessage: SemanticalMessage{
+			Empty:          nil,
+			EmptyOverruled: nil,
+			NonEmpty:       nil,
+		},
+		expectedMask: nil,
+	},
+	{
+		name:      "non_empty semantical",
+		arguments: []string{"--non-empty"},
+		expectedMessage: SemanticalMessage{
+			NonEmpty: &SemanticalMessage_NonEmpty{},
+		},
+		expectedMask: []string{"non_empty"},
+	},
+	{
+		name:      "non_empty with value",
+		arguments: []string{"--non-empty.bool-value", "true"},
+		expectedMessage: SemanticalMessage{
+			NonEmpty: &SemanticalMessage_NonEmpty{
+				BoolValue: true,
+			},
+		},
+		expectedMask: []string{"non_empty.bool_value"},
 	},
 }
 
 var testMessagesWithOneOfSemanticalMeaning = []struct {
 	name            string
 	arguments       []string
-	expectedMessage OneOf
+	expectedMessage SemanticalOneOfMessage
 	expectedMask    []string
 }{
 	{
-		name:      "semantic exists",
-		arguments: []string{"--option.semantic"},
-		expectedMessage: OneOf{
-			Option: &OneOf_Semantic_{},
+		name:      "alternative exists",
+		arguments: []string{"--option.alternative"},
+		expectedMessage: SemanticalOneOfMessage{
+			Option: &SemanticalOneOfMessage_Alternative{
+				Alternative: &SemanticalOneOfMessage_NonEmpty{},
+			},
 		},
-		expectedMask: []string{"option.semantic"},
+		expectedMask: []string{"option.alternative"},
 	},
 	{
 		name:      "doesn't exist",
 		arguments: []string{},
-		expectedMessage: OneOf{
+		expectedMessage: SemanticalOneOfMessage{
 			Option: nil,
 		},
 		expectedMask: nil,
 	},
 	{
-		name:      "nonsemantic exists",
-		arguments: []string{"--option.non-semantic"},
-		expectedMessage: OneOf{
-			Option: &OneOf_NonSemantic_{},
+		name:      "semantical exists",
+		arguments: []string{"--option.semantical"},
+		expectedMessage: SemanticalOneOfMessage{
+			Option: &SemanticalOneOfMessage_Semantical{
+				Semantical: &SemanticalOneOfMessage_Empty{},
+			},
 		},
-		expectedMask: []string{"option.non_semantic"},
+		expectedMask: []string{"option.semantical"},
+	},
+	{
+		name:      "alternative exists with value",
+		arguments: []string{"--option.alternative.bool-value", "true"},
+		expectedMessage: SemanticalOneOfMessage{
+			Option: &SemanticalOneOfMessage_Alternative{
+				Alternative: &SemanticalOneOfMessage_NonEmpty{
+					BoolValue: true,
+				},
+			},
+		},
+		expectedMask: []string{"option.alternative.bool_value"},
 	},
 }
 
@@ -67,7 +113,7 @@ func TestSetFlagsMessageWithSemanticalMeaning(t *testing.T) {
 	for _, tt := range testMessagesWithSemanticalMeaning {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForNonSemantic(fs, "", false)
+			AddSetFlagsForSemanticalMessage(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}
@@ -77,7 +123,7 @@ func TestSetFlagsMessageWithOneOfSemanticalMeaning(t *testing.T) {
 	for _, tt := range testMessagesWithOneOfSemanticalMeaning {
 		t.Run(tt.name, func(t *testing.T) {
 			fs := &pflag.FlagSet{}
-			AddSetFlagsForOneOf(fs, "", false)
+			AddSetFlagsForSemanticalOneOfMessage(fs, "", false)
 			expectMessageEqual(t, fs, tt.arguments, &tt.expectedMessage, tt.expectedMask)
 		})
 	}

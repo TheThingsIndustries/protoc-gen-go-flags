@@ -25,17 +25,18 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type NonSemantic struct {
+type SemanticalMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Semantic          *NonSemantic_Semantic `protobuf:"bytes,1,opt,name=semantic,proto3" json:"semantic,omitempty"`
-	OverruledSemantic *NonSemantic_Semantic `protobuf:"bytes,2,opt,name=overruled_semantic,json=overruledSemantic,proto3" json:"overruled_semantic,omitempty"`
+	Empty          *SemanticalMessage_Empty    `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
+	EmptyOverruled *SemanticalMessage_Empty    `protobuf:"bytes,2,opt,name=empty_overruled,json=emptyOverruled,proto3" json:"empty_overruled,omitempty"`
+	NonEmpty       *SemanticalMessage_NonEmpty `protobuf:"bytes,3,opt,name=non_empty,json=nonEmpty,proto3" json:"non_empty,omitempty"`
 }
 
-func (x *NonSemantic) Reset() {
-	*x = NonSemantic{}
+func (x *SemanticalMessage) Reset() {
+	*x = SemanticalMessage{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_message_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -43,13 +44,13 @@ func (x *NonSemantic) Reset() {
 	}
 }
 
-func (x *NonSemantic) String() string {
+func (x *SemanticalMessage) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NonSemantic) ProtoMessage() {}
+func (*SemanticalMessage) ProtoMessage() {}
 
-func (x *NonSemantic) ProtoReflect() protoreflect.Message {
+func (x *SemanticalMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_message_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -61,39 +62,46 @@ func (x *NonSemantic) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NonSemantic.ProtoReflect.Descriptor instead.
-func (*NonSemantic) Descriptor() ([]byte, []int) {
+// Deprecated: Use SemanticalMessage.ProtoReflect.Descriptor instead.
+func (*SemanticalMessage) Descriptor() ([]byte, []int) {
 	return file_message_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *NonSemantic) GetSemantic() *NonSemantic_Semantic {
+func (x *SemanticalMessage) GetEmpty() *SemanticalMessage_Empty {
 	if x != nil {
-		return x.Semantic
+		return x.Empty
 	}
 	return nil
 }
 
-func (x *NonSemantic) GetOverruledSemantic() *NonSemantic_Semantic {
+func (x *SemanticalMessage) GetEmptyOverruled() *SemanticalMessage_Empty {
 	if x != nil {
-		return x.OverruledSemantic
+		return x.EmptyOverruled
 	}
 	return nil
 }
 
-type OneOf struct {
+func (x *SemanticalMessage) GetNonEmpty() *SemanticalMessage_NonEmpty {
+	if x != nil {
+		return x.NonEmpty
+	}
+	return nil
+}
+
+type SemanticalOneOfMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Option:
 	//
-	//	*OneOf_Semantic_
-	//	*OneOf_NonSemantic_
-	Option isOneOf_Option `protobuf_oneof:"option"`
+	//	*SemanticalOneOfMessage_Semantical
+	//	*SemanticalOneOfMessage_Alternative
+	Option isSemanticalOneOfMessage_Option `protobuf_oneof:"option"`
 }
 
-func (x *OneOf) Reset() {
-	*x = OneOf{}
+func (x *SemanticalOneOfMessage) Reset() {
+	*x = SemanticalOneOfMessage{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_message_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -101,13 +109,13 @@ func (x *OneOf) Reset() {
 	}
 }
 
-func (x *OneOf) String() string {
+func (x *SemanticalOneOfMessage) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*OneOf) ProtoMessage() {}
+func (*SemanticalOneOfMessage) ProtoMessage() {}
 
-func (x *OneOf) ProtoReflect() protoreflect.Message {
+func (x *SemanticalOneOfMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_message_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -119,56 +127,56 @@ func (x *OneOf) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use OneOf.ProtoReflect.Descriptor instead.
-func (*OneOf) Descriptor() ([]byte, []int) {
+// Deprecated: Use SemanticalOneOfMessage.ProtoReflect.Descriptor instead.
+func (*SemanticalOneOfMessage) Descriptor() ([]byte, []int) {
 	return file_message_proto_rawDescGZIP(), []int{1}
 }
 
-func (m *OneOf) GetOption() isOneOf_Option {
+func (m *SemanticalOneOfMessage) GetOption() isSemanticalOneOfMessage_Option {
 	if m != nil {
 		return m.Option
 	}
 	return nil
 }
 
-func (x *OneOf) GetSemantic() *OneOf_Semantic {
-	if x, ok := x.GetOption().(*OneOf_Semantic_); ok {
-		return x.Semantic
+func (x *SemanticalOneOfMessage) GetSemantical() *SemanticalOneOfMessage_Empty {
+	if x, ok := x.GetOption().(*SemanticalOneOfMessage_Semantical); ok {
+		return x.Semantical
 	}
 	return nil
 }
 
-func (x *OneOf) GetNonSemantic() *OneOf_NonSemantic {
-	if x, ok := x.GetOption().(*OneOf_NonSemantic_); ok {
-		return x.NonSemantic
+func (x *SemanticalOneOfMessage) GetAlternative() *SemanticalOneOfMessage_NonEmpty {
+	if x, ok := x.GetOption().(*SemanticalOneOfMessage_Alternative); ok {
+		return x.Alternative
 	}
 	return nil
 }
 
-type isOneOf_Option interface {
-	isOneOf_Option()
+type isSemanticalOneOfMessage_Option interface {
+	isSemanticalOneOfMessage_Option()
 }
 
-type OneOf_Semantic_ struct {
-	Semantic *OneOf_Semantic `protobuf:"bytes,1,opt,name=semantic,proto3,oneof"`
+type SemanticalOneOfMessage_Semantical struct {
+	Semantical *SemanticalOneOfMessage_Empty `protobuf:"bytes,1,opt,name=semantical,proto3,oneof"`
 }
 
-type OneOf_NonSemantic_ struct {
-	NonSemantic *OneOf_NonSemantic `protobuf:"bytes,2,opt,name=non_semantic,json=nonSemantic,proto3,oneof"`
+type SemanticalOneOfMessage_Alternative struct {
+	Alternative *SemanticalOneOfMessage_NonEmpty `protobuf:"bytes,2,opt,name=alternative,proto3,oneof"`
 }
 
-func (*OneOf_Semantic_) isOneOf_Option() {}
+func (*SemanticalOneOfMessage_Semantical) isSemanticalOneOfMessage_Option() {}
 
-func (*OneOf_NonSemantic_) isOneOf_Option() {}
+func (*SemanticalOneOfMessage_Alternative) isSemanticalOneOfMessage_Option() {}
 
-type NonSemantic_Semantic struct {
+type SemanticalMessage_Empty struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *NonSemantic_Semantic) Reset() {
-	*x = NonSemantic_Semantic{}
+func (x *SemanticalMessage_Empty) Reset() {
+	*x = SemanticalMessage_Empty{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_message_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -176,13 +184,13 @@ func (x *NonSemantic_Semantic) Reset() {
 	}
 }
 
-func (x *NonSemantic_Semantic) String() string {
+func (x *SemanticalMessage_Empty) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NonSemantic_Semantic) ProtoMessage() {}
+func (*SemanticalMessage_Empty) ProtoMessage() {}
 
-func (x *NonSemantic_Semantic) ProtoReflect() protoreflect.Message {
+func (x *SemanticalMessage_Empty) ProtoReflect() protoreflect.Message {
 	mi := &file_message_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -194,19 +202,21 @@ func (x *NonSemantic_Semantic) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NonSemantic_Semantic.ProtoReflect.Descriptor instead.
-func (*NonSemantic_Semantic) Descriptor() ([]byte, []int) {
+// Deprecated: Use SemanticalMessage_Empty.ProtoReflect.Descriptor instead.
+func (*SemanticalMessage_Empty) Descriptor() ([]byte, []int) {
 	return file_message_proto_rawDescGZIP(), []int{0, 0}
 }
 
-type OneOf_Semantic struct {
+type SemanticalMessage_NonEmpty struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	BoolValue bool `protobuf:"varint,1,opt,name=bool_value,json=boolValue,proto3" json:"bool_value,omitempty"`
 }
 
-func (x *OneOf_Semantic) Reset() {
-	*x = OneOf_Semantic{}
+func (x *SemanticalMessage_NonEmpty) Reset() {
+	*x = SemanticalMessage_NonEmpty{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_message_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -214,13 +224,13 @@ func (x *OneOf_Semantic) Reset() {
 	}
 }
 
-func (x *OneOf_Semantic) String() string {
+func (x *SemanticalMessage_NonEmpty) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*OneOf_Semantic) ProtoMessage() {}
+func (*SemanticalMessage_NonEmpty) ProtoMessage() {}
 
-func (x *OneOf_Semantic) ProtoReflect() protoreflect.Message {
+func (x *SemanticalMessage_NonEmpty) ProtoReflect() protoreflect.Message {
 	mi := &file_message_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -232,21 +242,26 @@ func (x *OneOf_Semantic) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use OneOf_Semantic.ProtoReflect.Descriptor instead.
-func (*OneOf_Semantic) Descriptor() ([]byte, []int) {
-	return file_message_proto_rawDescGZIP(), []int{1, 0}
+// Deprecated: Use SemanticalMessage_NonEmpty.ProtoReflect.Descriptor instead.
+func (*SemanticalMessage_NonEmpty) Descriptor() ([]byte, []int) {
+	return file_message_proto_rawDescGZIP(), []int{0, 1}
 }
 
-type OneOf_NonSemantic struct {
+func (x *SemanticalMessage_NonEmpty) GetBoolValue() bool {
+	if x != nil {
+		return x.BoolValue
+	}
+	return false
+}
+
+type SemanticalOneOfMessage_Empty struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-
-	Boolean bool `protobuf:"varint,1,opt,name=boolean,proto3" json:"boolean,omitempty"`
 }
 
-func (x *OneOf_NonSemantic) Reset() {
-	*x = OneOf_NonSemantic{}
+func (x *SemanticalOneOfMessage_Empty) Reset() {
+	*x = SemanticalOneOfMessage_Empty{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_message_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -254,13 +269,13 @@ func (x *OneOf_NonSemantic) Reset() {
 	}
 }
 
-func (x *OneOf_NonSemantic) String() string {
+func (x *SemanticalOneOfMessage_Empty) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*OneOf_NonSemantic) ProtoMessage() {}
+func (*SemanticalOneOfMessage_Empty) ProtoMessage() {}
 
-func (x *OneOf_NonSemantic) ProtoReflect() protoreflect.Message {
+func (x *SemanticalOneOfMessage_Empty) ProtoReflect() protoreflect.Message {
 	mi := &file_message_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -272,14 +287,54 @@ func (x *OneOf_NonSemantic) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use OneOf_NonSemantic.ProtoReflect.Descriptor instead.
-func (*OneOf_NonSemantic) Descriptor() ([]byte, []int) {
+// Deprecated: Use SemanticalOneOfMessage_Empty.ProtoReflect.Descriptor instead.
+func (*SemanticalOneOfMessage_Empty) Descriptor() ([]byte, []int) {
+	return file_message_proto_rawDescGZIP(), []int{1, 0}
+}
+
+type SemanticalOneOfMessage_NonEmpty struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BoolValue bool `protobuf:"varint,1,opt,name=bool_value,json=boolValue,proto3" json:"bool_value,omitempty"`
+}
+
+func (x *SemanticalOneOfMessage_NonEmpty) Reset() {
+	*x = SemanticalOneOfMessage_NonEmpty{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_message_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SemanticalOneOfMessage_NonEmpty) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SemanticalOneOfMessage_NonEmpty) ProtoMessage() {}
+
+func (x *SemanticalOneOfMessage_NonEmpty) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SemanticalOneOfMessage_NonEmpty.ProtoReflect.Descriptor instead.
+func (*SemanticalOneOfMessage_NonEmpty) Descriptor() ([]byte, []int) {
 	return file_message_proto_rawDescGZIP(), []int{1, 1}
 }
 
-func (x *OneOf_NonSemantic) GetBoolean() bool {
+func (x *SemanticalOneOfMessage_NonEmpty) GetBoolValue() bool {
 	if x != nil {
-		return x.Boolean
+		return x.BoolValue
 	}
 	return false
 }
@@ -292,39 +347,51 @@ var file_message_proto_rawDesc = []byte{
 	0x2e, 0x74, 0x65, 0x73, 0x74, 0x1a, 0x11, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f,
 	0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e,
 	0x61, 0x6c, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67,
-	0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xda, 0x01, 0x0a, 0x0b, 0x4e, 0x6f, 0x6e, 0x53,
-	0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x12, 0x4e, 0x0a, 0x08, 0x73, 0x65, 0x6d, 0x61, 0x6e,
-	0x74, 0x69, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x74, 0x68, 0x65, 0x74,
-	0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65, 0x73, 0x74,
-	0x2e, 0x4e, 0x6f, 0x6e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x2e, 0x53, 0x65, 0x6d,
-	0x61, 0x6e, 0x74, 0x69, 0x63, 0x42, 0x06, 0xf2, 0xaa, 0x19, 0x02, 0x08, 0x00, 0x52, 0x08, 0x73,
-	0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x12, 0x63, 0x0a, 0x12, 0x6f, 0x76, 0x65, 0x72, 0x72,
-	0x75, 0x6c, 0x65, 0x64, 0x5f, 0x73, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x74, 0x68, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e,
-	0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x4e, 0x6f, 0x6e, 0x53, 0x65,
-	0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x2e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x42,
-	0x08, 0xf2, 0xaa, 0x19, 0x04, 0x08, 0x00, 0x30, 0x00, 0x52, 0x11, 0x6f, 0x76, 0x65, 0x72, 0x72,
-	0x75, 0x6c, 0x65, 0x64, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x1a, 0x0a, 0x0a, 0x08,
-	0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x3a, 0x0a, 0xf2, 0xaa, 0x19, 0x06, 0x08, 0x00,
-	0x10, 0x01, 0x20, 0x01, 0x22, 0xe4, 0x01, 0x0a, 0x05, 0x4f, 0x6e, 0x65, 0x4f, 0x66, 0x12, 0x42,
-	0x0a, 0x08, 0x73, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x24, 0x2e, 0x74, 0x68, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x66, 0x6c, 0x61,
-	0x67, 0x73, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x4f, 0x6e, 0x65, 0x4f, 0x66, 0x2e, 0x53, 0x65,
-	0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x48, 0x00, 0x52, 0x08, 0x73, 0x65, 0x6d, 0x61, 0x6e, 0x74,
-	0x69, 0x63, 0x12, 0x4c, 0x0a, 0x0c, 0x6e, 0x6f, 0x6e, 0x5f, 0x73, 0x65, 0x6d, 0x61, 0x6e, 0x74,
-	0x69, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x74, 0x68, 0x65, 0x74, 0x68,
-	0x69, 0x6e, 0x67, 0x73, 0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e,
-	0x4f, 0x6e, 0x65, 0x4f, 0x66, 0x2e, 0x4e, 0x6f, 0x6e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69,
-	0x63, 0x48, 0x00, 0x52, 0x0b, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63,
-	0x1a, 0x0a, 0x0a, 0x08, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x1a, 0x27, 0x0a, 0x0b,
-	0x4e, 0x6f, 0x6e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x12, 0x18, 0x0a, 0x07, 0x62,
-	0x6f, 0x6f, 0x6c, 0x65, 0x61, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x62, 0x6f,
-	0x6f, 0x6c, 0x65, 0x61, 0x6e, 0x3a, 0x0a, 0xf2, 0xaa, 0x19, 0x06, 0x08, 0x00, 0x10, 0x01, 0x20,
-	0x01, 0x42, 0x08, 0x0a, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x39, 0x5a, 0x37, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x54, 0x68, 0x65, 0x54, 0x68, 0x69,
-	0x6e, 0x67, 0x73, 0x49, 0x6e, 0x64, 0x75, 0x73, 0x74, 0x72, 0x69, 0x65, 0x73, 0x2f, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2d, 0x66, 0x6c, 0x61, 0x67,
-	0x73, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xdb, 0x02, 0x0a, 0x11, 0x53, 0x65, 0x6d, 0x61,
+	0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x43, 0x0a,
+	0x05, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x74,
+	0x68, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74,
+	0x65, 0x73, 0x74, 0x2e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x4d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52, 0x05, 0x65, 0x6d, 0x70,
+	0x74, 0x79, 0x12, 0x5e, 0x0a, 0x0f, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x5f, 0x6f, 0x76, 0x65, 0x72,
+	0x72, 0x75, 0x6c, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x74, 0x68,
+	0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65,
+	0x73, 0x74, 0x2e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x4d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x06, 0xf2, 0xaa, 0x19, 0x02,
+	0x30, 0x00, 0x52, 0x0e, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x4f, 0x76, 0x65, 0x72, 0x72, 0x75, 0x6c,
+	0x65, 0x64, 0x12, 0x4d, 0x0a, 0x09, 0x6e, 0x6f, 0x6e, 0x5f, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x30, 0x2e, 0x74, 0x68, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67,
+	0x73, 0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x53, 0x65, 0x6d,
+	0x61, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x4e,
+	0x6f, 0x6e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52, 0x08, 0x6e, 0x6f, 0x6e, 0x45, 0x6d, 0x70, 0x74,
+	0x79, 0x1a, 0x11, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x3a, 0x08, 0xf2, 0xaa, 0x19, 0x04,
+	0x08, 0x00, 0x10, 0x01, 0x1a, 0x33, 0x0a, 0x08, 0x4e, 0x6f, 0x6e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x12, 0x1d, 0x0a, 0x0a, 0x62, 0x6f, 0x6f, 0x6c, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x62, 0x6f, 0x6f, 0x6c, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x3a,
+	0x08, 0xf2, 0xaa, 0x19, 0x04, 0x08, 0x00, 0x10, 0x01, 0x3a, 0x0a, 0xf2, 0xaa, 0x19, 0x06, 0x08,
+	0x00, 0x10, 0x01, 0x20, 0x01, 0x22, 0x9d, 0x02, 0x0a, 0x16, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74,
+	0x69, 0x63, 0x61, 0x6c, 0x4f, 0x6e, 0x65, 0x4f, 0x66, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x12, 0x54, 0x0a, 0x0a, 0x73, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x32, 0x2e, 0x74, 0x68, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73,
+	0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x53, 0x65, 0x6d, 0x61,
+	0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x4f, 0x6e, 0x65, 0x4f, 0x66, 0x4d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x48, 0x00, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x61,
+	0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x12, 0x59, 0x0a, 0x0b, 0x61, 0x6c, 0x74, 0x65, 0x72, 0x6e,
+	0x61, 0x74, 0x69, 0x76, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x35, 0x2e, 0x74, 0x68,
+	0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2e, 0x74, 0x65,
+	0x73, 0x74, 0x2e, 0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x6c, 0x4f, 0x6e, 0x65,
+	0x4f, 0x66, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x4e, 0x6f, 0x6e, 0x45, 0x6d, 0x70,
+	0x74, 0x79, 0x48, 0x00, 0x52, 0x0b, 0x61, 0x6c, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x74, 0x69, 0x76,
+	0x65, 0x1a, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x33, 0x0a, 0x08, 0x4e, 0x6f,
+	0x6e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x1d, 0x0a, 0x0a, 0x62, 0x6f, 0x6f, 0x6c, 0x5f, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x62, 0x6f, 0x6f, 0x6c,
+	0x56, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x08, 0xf2, 0xaa, 0x19, 0x04, 0x08, 0x00, 0x10, 0x01, 0x3a,
+	0x0a, 0xf2, 0xaa, 0x19, 0x06, 0x08, 0x00, 0x10, 0x01, 0x20, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x6f,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x39, 0x5a, 0x37, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2f, 0x54, 0x68, 0x65, 0x54, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x49, 0x6e, 0x64,
+	0x75, 0x73, 0x74, 0x72, 0x69, 0x65, 0x73, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67,
+	0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2d, 0x66, 0x6c, 0x61, 0x67, 0x73, 0x2f, 0x74, 0x65, 0x73, 0x74,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -339,24 +406,26 @@ func file_message_proto_rawDescGZIP() []byte {
 	return file_message_proto_rawDescData
 }
 
-var file_message_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_message_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_message_proto_goTypes = []interface{}{
-	(*NonSemantic)(nil),          // 0: thethings.flags.test.NonSemantic
-	(*OneOf)(nil),                // 1: thethings.flags.test.OneOf
-	(*NonSemantic_Semantic)(nil), // 2: thethings.flags.test.NonSemantic.Semantic
-	(*OneOf_Semantic)(nil),       // 3: thethings.flags.test.OneOf.Semantic
-	(*OneOf_NonSemantic)(nil),    // 4: thethings.flags.test.OneOf.NonSemantic
+	(*SemanticalMessage)(nil),               // 0: thethings.flags.test.SemanticalMessage
+	(*SemanticalOneOfMessage)(nil),          // 1: thethings.flags.test.SemanticalOneOfMessage
+	(*SemanticalMessage_Empty)(nil),         // 2: thethings.flags.test.SemanticalMessage.Empty
+	(*SemanticalMessage_NonEmpty)(nil),      // 3: thethings.flags.test.SemanticalMessage.NonEmpty
+	(*SemanticalOneOfMessage_Empty)(nil),    // 4: thethings.flags.test.SemanticalOneOfMessage.Empty
+	(*SemanticalOneOfMessage_NonEmpty)(nil), // 5: thethings.flags.test.SemanticalOneOfMessage.NonEmpty
 }
 var file_message_proto_depIdxs = []int32{
-	2, // 0: thethings.flags.test.NonSemantic.semantic:type_name -> thethings.flags.test.NonSemantic.Semantic
-	2, // 1: thethings.flags.test.NonSemantic.overruled_semantic:type_name -> thethings.flags.test.NonSemantic.Semantic
-	3, // 2: thethings.flags.test.OneOf.semantic:type_name -> thethings.flags.test.OneOf.Semantic
-	4, // 3: thethings.flags.test.OneOf.non_semantic:type_name -> thethings.flags.test.OneOf.NonSemantic
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	2, // 0: thethings.flags.test.SemanticalMessage.empty:type_name -> thethings.flags.test.SemanticalMessage.Empty
+	2, // 1: thethings.flags.test.SemanticalMessage.empty_overruled:type_name -> thethings.flags.test.SemanticalMessage.Empty
+	3, // 2: thethings.flags.test.SemanticalMessage.non_empty:type_name -> thethings.flags.test.SemanticalMessage.NonEmpty
+	4, // 3: thethings.flags.test.SemanticalOneOfMessage.semantical:type_name -> thethings.flags.test.SemanticalOneOfMessage.Empty
+	5, // 4: thethings.flags.test.SemanticalOneOfMessage.alternative:type_name -> thethings.flags.test.SemanticalOneOfMessage.NonEmpty
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_message_proto_init() }
@@ -366,7 +435,7 @@ func file_message_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_message_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NonSemantic); i {
+			switch v := v.(*SemanticalMessage); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -378,7 +447,7 @@ func file_message_proto_init() {
 			}
 		}
 		file_message_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OneOf); i {
+			switch v := v.(*SemanticalOneOfMessage); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -390,7 +459,7 @@ func file_message_proto_init() {
 			}
 		}
 		file_message_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NonSemantic_Semantic); i {
+			switch v := v.(*SemanticalMessage_Empty); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -402,7 +471,7 @@ func file_message_proto_init() {
 			}
 		}
 		file_message_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OneOf_Semantic); i {
+			switch v := v.(*SemanticalMessage_NonEmpty); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -414,7 +483,19 @@ func file_message_proto_init() {
 			}
 		}
 		file_message_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OneOf_NonSemantic); i {
+			switch v := v.(*SemanticalOneOfMessage_Empty); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_message_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SemanticalOneOfMessage_NonEmpty); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -427,8 +508,8 @@ func file_message_proto_init() {
 		}
 	}
 	file_message_proto_msgTypes[1].OneofWrappers = []interface{}{
-		(*OneOf_Semantic_)(nil),
-		(*OneOf_NonSemantic_)(nil),
+		(*SemanticalOneOfMessage_Semantical)(nil),
+		(*SemanticalOneOfMessage_Alternative)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -436,7 +517,7 @@ func file_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_message_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -46,13 +46,13 @@ func (g *generator) messageHasSetFlags(message *protogen.Message, visited ...*pr
 	return generateSetFlags
 }
 
-func (g *generator) fieldHasSemanticalFlags(message *protogen.Message, field *protogen.Field) bool {
+func (g *generator) hasSemanticalFlag(message *protogen.Message, field *protogen.Field) bool {
+	var generateSemanticalFlags bool
+
 	// Semantical flags are only defined for messages.
 	if field.Desc.Kind() != protoreflect.MessageKind {
 		return false
 	}
-
-	var generateSemanticalFlags bool
 
 	// The `semantical` flag can be set by the message and/or the field itself.
 	// The field overrides the message flags.
@@ -84,7 +84,7 @@ nextField:
 			continue nextField
 		}
 
-		semantical := g.fieldHasSemanticalFlags(message, field)
+		semantical := g.hasSemanticalFlag(message, field)
 
 		var customFlagType *protogen.GoIdent
 		fieldOpts := field.Desc.Options()
@@ -106,6 +106,7 @@ nextField:
 				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
 			}
 		}
+
 		// Convert field name to flag name (underscore to dash).
 		flagName := flagNameReplacer.Replace(string(field.Desc.Name()))
 		// If field is oneof, add oneof field name to flag name.
@@ -138,9 +139,11 @@ nextField:
 					} else {
 						g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForField(wrappedField)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					}
+
 				// Add only flags for supported WKTs.
 				case isSupportedWKTSliceOrMap(value.Message):
 					g.P("flags.AddFlag(", flagspluginPackage.Ident("NewString"+g.libNameForWKT(value.Message)+"MapFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+
 				default:
 					g.P("// FIXME: Skipping ", field.GoName, " because maps with message value types are currently not supported.")
 				}
@@ -154,15 +157,18 @@ nextField:
 				g.P("flags.AddFlag(", *customFlagType, "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 				continue nextField
 			}
+
 			switch field.Desc.Kind() {
 			default:
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+
 			case protoreflect.EnumKind:
 				if enumAliasMap != nil {
 					g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value, ", *enumAliasMap, "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 					continue nextField
 				}
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"SliceFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value", "", "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+
 			case protoreflect.MessageKind:
 				switch {
 				case messageIsWrapper(field.Message):
@@ -191,14 +197,17 @@ nextField:
 			}
 			continue nextField
 		}
+
 		if customFlagType != nil {
 			// If flag has a custom new flag definition, add this and continue with next field.
 			g.P("flags.AddFlag(", *customFlagType, "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 			continue nextField
 		}
+
 		switch field.Desc.Kind() {
 		default:
 			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+
 		case protoreflect.EnumKind:
 			if enumAliasMap != nil {
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix),`, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value, ", *enumAliasMap, "), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
@@ -206,15 +215,21 @@ nextField:
 			}
 			// If a field is enum, include enum value description.
 			g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(field)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("EnumValueDesc("), field.Enum.GoIdent, "_value), ", flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+
 		case protoreflect.MessageKind:
 			switch {
 			case g.messageHasSetFlags(field.Message):
 				// If the field is of type message, and the message has set flags, add those.
 				g.P(field.Message.GoIdent.GoImportPath.Ident("AddSetFlagsFor"+field.Message.GoIdent.GoName), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, ifThenElse((hidden || messageIsWrapper(field.Message)), "true", "hidden"), ")")
+				// If the field has a semantical meaning add a boolean flag for the flagName itself.
+				if semantical {
+					g.genSemanticalSetFlags(flagName, hidden)
+				}
 				if messageIsWrapper(field.Message) {
 					// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
 					g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
 				}
+
 			case messageIsWrapper(field.Message):
 				wrappedField := field.Message.Fields[0]
 				if wrappedField.Desc.Kind() == protoreflect.EnumKind {
@@ -235,15 +250,18 @@ nextField:
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForField(wrappedField)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), "", `, flagspluginPackage.Ident("WithHidden"), "(true)", "))")
 				// If the message is a wrapper, include the parent flag as an alias that points to the wrapped flag value.
 				g.P(flagspluginPackage.Ident("AddAlias"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `.value", prefix), `, flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), ")")
+
 			case messageIsWKT(field.Message):
 				if !isSupportedWKT(field.Message) {
 					g.P("// FIXME: Skipping ", field.GoName, " because this WKT is currently not supported.")
 					continue nextField
 				}
 				g.P("flags.AddFlag(", flagspluginPackage.Ident("New"+g.libNameForWKT(field.Message)+"Flag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+
 			default:
+				// If the field is not of any known type but does have a semantical tag, generate a flag for it.
 				if semantical {
-					g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
+					g.genSemanticalSetFlags(flagName, hidden)
 				} else {
 					g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
 				}
@@ -265,7 +283,7 @@ nextField:
 			continue nextField
 		}
 
-		semantical := g.fieldHasSemanticalFlags(message, field)
+		semantical := g.hasSemanticalFlag(message, field)
 
 		var (
 			fieldGoName  interface{} = fieldGoName(field)
@@ -273,7 +291,9 @@ nextField:
 			nullable                 = fieldIsNullable(field)
 			customGetter *protogen.GoIdent
 		)
+
 		fieldOpts := field.Desc.Options()
+
 		// If customtype annotation is set, the getter must be of format Get{CustomFlag} (with Slice appended if list).
 		if customtype != nil {
 			customGetter = flagFromCustomType(field)
@@ -281,6 +301,7 @@ nextField:
 			// Otherwise if custom getter set, use the custom getter instead of underlying proto field type.
 			customGetter = parseGoIdent(proto.GetExtension(field.Desc.Options(), annotations.E_Field).(*annotations.FieldOptions).GetSetFlagGetterFunc())
 		}
+
 		var enumAliasMap *protogen.GoIdent
 		// If field is enum, check if there is an alias map defined for it.
 		if field.Desc.Kind() == protoreflect.EnumKind {
@@ -289,6 +310,7 @@ nextField:
 				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
 			}
 		}
+
 		// If field is a wrapped enum, check if there is an alias map defined for it.
 		if field.Desc.Kind() == protoreflect.MessageKind && messageIsWrapper(field.Message) && field.Message.Fields[0].Desc.Kind() == protoreflect.EnumKind {
 			enumOpts := field.Message.Fields[0].Enum.Desc.Options()
@@ -296,6 +318,7 @@ nextField:
 				enumAliasMap = parseGoIdent(proto.GetExtension(enumOpts, annotations.E_Enum).(*annotations.EnumOptions).GetAliasMap())
 			}
 		}
+
 		flagName := field.Desc.Name()
 		if field.Oneof != nil {
 			// If field is oneof, add oneof field name to flag name.
@@ -314,12 +337,14 @@ nextField:
 				g.P("}")
 				continue nextField
 			}
+
 			// If customtype is set for the field, and there is no custom getter, fail immediately.
 			// This shouldn't happen because the getters are always generated for custom types whether they are there or not.
 			if customtype != nil {
 				g.gen.Error(fmt.Errorf("field with customtype %q doesn't have custom_flag_type set", message.Desc.FullName()))
 				return
 			}
+
 			// If the field is a map, the field type is a MapEntry message.
 			// In the MapEntry message, the first field is the key, and the second field is the value.
 			key := field.Message.Fields[0]
@@ -329,6 +354,7 @@ nextField:
 				g.P("// FIXME: Skipping ", field.GoName, " because maps with ", key.Desc.Kind(), " key types are currently not supported.")
 				continue nextField
 			}
+
 			switch value.Desc.Kind() {
 			default:
 				g.P("if val, changed, err := ", flagspluginPackage.Ident("GetString"+g.libNameForField(value)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
@@ -337,6 +363,7 @@ nextField:
 				g.P("m", ".", fieldGoName, " = val")
 				g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 				g.P("}")
+
 			case protoreflect.MessageKind:
 				switch {
 				case messageIsWrapper(value.Message):
@@ -357,6 +384,7 @@ nextField:
 					g.P("}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
+
 				case isSupportedWKTSliceOrMap(value.Message):
 					g.P("if val, changed, err := ", flagspluginPackage.Ident("GetString"+g.libNameForWKT(value.Message)+"Map"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
@@ -368,6 +396,7 @@ nextField:
 					g.P("}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
+
 				default:
 					g.P("// FIXME: Skipping ", field.GoName, " because maps with message value types are currently not supported.")
 				}
@@ -388,12 +417,14 @@ nextField:
 				g.P("}")
 				continue nextField
 			}
+
 			// If customtype is set for the field, and there is no custom getter, fail immediately.
 			// This shouldn't happen because the getters are always generated for custom types whether they are there or not.
 			if customtype != nil {
 				g.gen.Error(fmt.Errorf("field with customtype %q doesn't have custom_flag_type set", message.Desc.FullName()))
 				return
 			}
+
 			switch field.Desc.Kind() {
 			default:
 				// When getting slice flags, append `Slice` to the go flag getter.
@@ -420,6 +451,7 @@ nextField:
 				}
 				g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 				g.P("}")
+
 			case protoreflect.MessageKind:
 				switch {
 				case messageIsWrapper(field.Message):
@@ -448,6 +480,7 @@ nextField:
 					g.P("}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
+
 				case messageIsWKT(field.Message):
 					// Currently we support only FieldMask, Timestamp, and Duration WKTs (other than the wrapped WKTs).
 					if !isSupportedWKTSliceOrMap(field.Message) {
@@ -464,6 +497,7 @@ nextField:
 					g.P("}")
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 					g.P("}")
+
 				default:
 					g.P("// FIXME: Skipping ", field.GoName, " because it does not seem to implement AddSetFlags.")
 				}
@@ -473,11 +507,11 @@ nextField:
 
 		// The identifier of the message is m, but in case of a oneof, we'll be operating on ov.
 		messageOrOneofIdent := "m"
-
 		// If this field is in a oneof, allocate a new oneof value wrapper.
 		if field.Oneof != nil {
 			messageOrOneofIdent = "ov"
 		}
+
 		// If custom getter is set for the field, use it to retrieve the flag value.
 		if customGetter != nil {
 			g.P("if val, changed, err := ", *customGetter, "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
@@ -529,6 +563,7 @@ nextField:
 				if messageIsWrapper(field.Message) {
 					fieldName = field.Message.Fields[0]
 				}
+
 				switch {
 				case g.messageHasSetFlags(field.Message):
 					// If field message has flag setter, we first check if any flags for the message are set.
@@ -544,9 +579,15 @@ nextField:
 					// If any flags are set, we use the message setter to set the field, and obtain the set paths to return.
 					g.P("if setPaths, err := ", messageOrOneofIdent, ".", fieldGoName, ".SetFromFlags(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 					g.P("return nil, err")
+					// If the flag is semantical there will be no paths returned, in this case append the flagName.
+					if semantical {
+						g.P("} else if len(setPaths) == 0 {")
+						g.P("paths = append(paths, ", `"`, flagName, `")`)
+					}
 					g.P("} else {")
 					g.P("paths = append(paths, setPaths...)")
 					g.P("}")
+
 				case messageIsWrapper(field.Message):
 					if messageIsWKT(field.Message) {
 						g.P("if val, changed, err := ", flagspluginPackage.Ident("Get"+g.libNameForField(fieldName)), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
@@ -578,13 +619,19 @@ nextField:
 					g.P("paths = append(paths, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix))`)
 
 				default:
+					// If the message is not of a known kind or has no set tag, generate a semantical handler.
 					if semantical {
 						g.P("if _, changed, err := ", flagspluginPackage.Ident("GetBool"), "(flags, ", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix)); err != nil {`)
 						g.P("return nil, err")
 						g.P("} else if changed {")
 						// If field is in a oneof, initialize an appropriate proto oneof type.
 						if field.Oneof != nil {
-							g.P(messageOrOneofIdent, " := &", field.Message.GoIdent, "_{}")
+							g.P(messageOrOneofIdent, " := &", field.GoIdent, "{}")
+							if nullable {
+								g.P("if ", messageOrOneofIdent, ".", fieldGoName, " == nil {")
+								g.P(messageOrOneofIdent, ".", fieldGoName, " =&", field.Message.GoIdent, "{}")
+								g.P("}")
+							}
 						} else {
 							g.P("m.", fieldGoName, " = &", field.Message.GoIdent, "{}")
 						}
@@ -596,6 +643,7 @@ nextField:
 				}
 			}
 		}
+
 		if field.Oneof != nil {
 			// Set the message field to the oneof wrapper.
 			g.P("m.", field.Oneof.GoName, " = ov")
@@ -635,4 +683,8 @@ func (g *generator) ifErrNotNil() {
 	g.P("if err != nil {")
 	g.P("return nil, err")
 	g.P("}")
+}
+
+func (g *generator) genSemanticalSetFlags(flagName string, hidden bool) {
+	g.P("flags.AddFlag(", flagspluginPackage.Ident("NewBoolFlag"), "(", flagspluginPackage.Ident("Prefix"), `("`, flagName, `", prefix), "", `, flagspluginPackage.Ident("WithHidden"), ifThenElse(hidden, "(true)", "(hidden)"), "))")
 }
