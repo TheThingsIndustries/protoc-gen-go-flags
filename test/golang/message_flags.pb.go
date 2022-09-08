@@ -11,44 +11,126 @@ import (
 	pflag "github.com/spf13/pflag"
 )
 
-// AddSetFlagsForNonSemantic adds flags to select fields in NonSemantic.
-func AddSetFlagsForNonSemantic(flags *pflag.FlagSet, prefix string, hidden bool) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("semantic", prefix), "", flagsplugin.WithHidden(hidden)))
-	// FIXME: Skipping OverruledSemantic because it does not seem to implement AddSetFlags.
+// AddSetFlagsForSemanticalMessage_Empty adds flags to select fields in SemanticalMessage_Empty.
+func AddSetFlagsForSemanticalMessage_Empty(flags *pflag.FlagSet, prefix string, hidden bool) {
 }
 
-// SetFromFlags sets the NonSemantic message from flags.
-func (m *NonSemantic) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if _, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("semantic", prefix)); err != nil {
-		return nil, err
-	} else if changed {
-		m.Semantic = &NonSemantic_Semantic{}
-		paths = append(paths, flagsplugin.Prefix("semantic", prefix))
-	}
-	// FIXME: Skipping OverruledSemantic because it does not seem to implement AddSetFlags.
+// SetFromFlags sets the SemanticalMessage_Empty message from flags.
+func (m *SemanticalMessage_Empty) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
 	return paths, nil
 }
 
-// AddSetFlagsForOneOf adds flags to select fields in OneOf.
-func AddSetFlagsForOneOf(flags *pflag.FlagSet, prefix string, hidden bool) {
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("option.semantic", prefix), "", flagsplugin.WithHidden(hidden)))
-	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("option.non-semantic", prefix), "", flagsplugin.WithHidden(hidden)))
+// AddSetFlagsForSemanticalMessage_NonEmpty adds flags to select fields in SemanticalMessage_NonEmpty.
+func AddSetFlagsForSemanticalMessage_NonEmpty(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("bool-value", prefix), "", flagsplugin.WithHidden(hidden)))
 }
 
-// SetFromFlags sets the OneOf message from flags.
-func (m *OneOf) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
-	if _, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("option.semantic", prefix)); err != nil {
+// SetFromFlags sets the SemanticalMessage_NonEmpty message from flags.
+func (m *SemanticalMessage_NonEmpty) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value", prefix)); err != nil {
 		return nil, err
 	} else if changed {
-		ov := &OneOf_Semantic_{}
-		paths = append(paths, flagsplugin.Prefix("option.semantic", prefix))
+		m.BoolValue = val
+		paths = append(paths, flagsplugin.Prefix("bool_value", prefix))
+	}
+	return paths, nil
+}
+
+// AddSetFlagsForSemanticalMessage adds flags to select fields in SemanticalMessage.
+func AddSetFlagsForSemanticalMessage(flags *pflag.FlagSet, prefix string, hidden bool) {
+	AddSetFlagsForSemanticalMessage_Empty(flags, flagsplugin.Prefix("empty", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("empty", prefix), "", flagsplugin.WithHidden(hidden)))
+	AddSetFlagsForSemanticalMessage_Empty(flags, flagsplugin.Prefix("empty-overruled", prefix), hidden)
+	AddSetFlagsForSemanticalMessage_NonEmpty(flags, flagsplugin.Prefix("non-empty", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("non-empty", prefix), "", flagsplugin.WithHidden(hidden)))
+}
+
+// SetFromFlags sets the SemanticalMessage message from flags.
+func (m *SemanticalMessage) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("empty", prefix)); changed {
+		if m.Empty == nil {
+			m.Empty = &SemanticalMessage_Empty{}
+		}
+		if setPaths, err := m.Empty.SetFromFlags(flags, flagsplugin.Prefix("empty", prefix)); err != nil {
+			return nil, err
+		} else if len(setPaths) == 0 {
+			paths = append(paths, "empty")
+		} else {
+			paths = append(paths, setPaths...)
+		}
+	}
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("empty_overruled", prefix)); changed {
+		if m.EmptyOverruled == nil {
+			m.EmptyOverruled = &SemanticalMessage_Empty{}
+		}
+		if setPaths, err := m.EmptyOverruled.SetFromFlags(flags, flagsplugin.Prefix("empty_overruled", prefix)); err != nil {
+			return nil, err
+		} else {
+			paths = append(paths, setPaths...)
+		}
+	}
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("non_empty", prefix)); changed {
+		if m.NonEmpty == nil {
+			m.NonEmpty = &SemanticalMessage_NonEmpty{}
+		}
+		if setPaths, err := m.NonEmpty.SetFromFlags(flags, flagsplugin.Prefix("non_empty", prefix)); err != nil {
+			return nil, err
+		} else if len(setPaths) == 0 {
+			paths = append(paths, "non_empty")
+		} else {
+			paths = append(paths, setPaths...)
+		}
+	}
+	return paths, nil
+}
+
+// AddSetFlagsForSemanticalOneOfMessage_NonEmpty adds flags to select fields in SemanticalOneOfMessage_NonEmpty.
+func AddSetFlagsForSemanticalOneOfMessage_NonEmpty(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("bool-value", prefix), "", flagsplugin.WithHidden(hidden)))
+}
+
+// SetFromFlags sets the SemanticalOneOfMessage_NonEmpty message from flags.
+func (m *SemanticalOneOfMessage_NonEmpty) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
+	if val, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("bool_value", prefix)); err != nil {
+		return nil, err
+	} else if changed {
+		m.BoolValue = val
+		paths = append(paths, flagsplugin.Prefix("bool_value", prefix))
+	}
+	return paths, nil
+}
+
+// AddSetFlagsForSemanticalOneOfMessage adds flags to select fields in SemanticalOneOfMessage.
+func AddSetFlagsForSemanticalOneOfMessage(flags *pflag.FlagSet, prefix string, hidden bool) {
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("option.semantical", prefix), "", flagsplugin.WithHidden(hidden)))
+	AddSetFlagsForSemanticalOneOfMessage_NonEmpty(flags, flagsplugin.Prefix("option.alternative", prefix), hidden)
+	flags.AddFlag(flagsplugin.NewBoolFlag(flagsplugin.Prefix("option.alternative", prefix), "", flagsplugin.WithHidden(hidden)))
+}
+
+// SetFromFlags sets the SemanticalOneOfMessage message from flags.
+func (m *SemanticalOneOfMessage) SetFromFlags(flags *pflag.FlagSet, prefix string) (paths []string, err error) {
+	if _, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("option.semantical", prefix)); err != nil {
+		return nil, err
+	} else if changed {
+		ov := &SemanticalOneOfMessage_Semantical{}
+		if ov.Semantical == nil {
+			ov.Semantical = &SemanticalOneOfMessage_Empty{}
+		}
+		paths = append(paths, flagsplugin.Prefix("option.semantical", prefix))
 		m.Option = ov
 	}
-	if _, changed, err := flagsplugin.GetBool(flags, flagsplugin.Prefix("option.non_semantic", prefix)); err != nil {
-		return nil, err
-	} else if changed {
-		ov := &OneOf_NonSemantic_{}
-		paths = append(paths, flagsplugin.Prefix("option.non_semantic", prefix))
+	if changed := flagsplugin.IsAnyPrefixSet(flags, flagsplugin.Prefix("option.alternative", prefix)); changed {
+		ov := &SemanticalOneOfMessage_Alternative{}
+		if ov.Alternative == nil {
+			ov.Alternative = &SemanticalOneOfMessage_NonEmpty{}
+		}
+		if setPaths, err := ov.Alternative.SetFromFlags(flags, flagsplugin.Prefix("option.alternative", prefix)); err != nil {
+			return nil, err
+		} else if len(setPaths) == 0 {
+			paths = append(paths, "option.alternative")
+		} else {
+			paths = append(paths, setPaths...)
+		}
 		m.Option = ov
 	}
 	return paths, nil
