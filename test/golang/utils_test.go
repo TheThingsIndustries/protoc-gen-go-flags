@@ -42,7 +42,6 @@ func expectMessageEqual(t *testing.T, flagSet *pflag.FlagSet, arguments []string
 
 	if generatedDiff != "" {
 		t.Errorf("expected : %s", string(expectedMsgText))
-		// t.Errorf("gogo     : %s", string(gogoMsgText))
 		t.Errorf("generated: %s", string(generatedMsgText))
 		if generatedDiff != "" {
 			t.Errorf("  diff   : %s", generatedDiff)

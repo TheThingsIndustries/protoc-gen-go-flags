@@ -4,19 +4,12 @@
 syntax = "proto3";
 
 import "annotations.proto";
-import "internal/gogoproto/gogo.proto";
 
 package thethings.flags.test;
 
 option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
-option (gogoproto.enum_stringer_all) = true;
-option (gogoproto.goproto_enum_stringer_all) = false;
-
 enum RegularEnum {
-  option (gogoproto.goproto_enum_prefix) = false;
-  option (gogoproto.enum_stringer) = false;
-
   REGULAR_UNKNOWN = 0;
 
   REGULAR_A = 1;
@@ -24,8 +17,8 @@ enum RegularEnum {
 }
 
 enum CustomEnum {
-  option (thethings.flags.enum) = { 
-    alias_map: "github.com/TheThingsIndustries/protoc-gen-go-flags/test/enum.CustomEnum_customvalue" 
+  option (thethings.flags.enum) = {
+    alias_map: "github.com/TheThingsIndustries/protoc-gen-go-flags/test/enum.CustomEnum_customvalue"
   };
 
   CUSTOM_UNKNOWN = 0;
@@ -60,27 +53,4 @@ message MessageWithOneofEnums {
     CustomEnum custom = 2;
     CustomEnumValue wrapped_custom = 3;
   }
-}
-
-message MessageWithEmbeddedMessageDefinitionWithEnums {
-  option (thethings.flags.message) = { select: true, set: true };
-
-  message EmbeddedMessageDefinitionWithEnum {
-    option (thethings.flags.message) = { select: true, set: true };
-
-    string string_value = 1;
-    enum EmbeddedEnum {
-      option (gogoproto.goproto_enum_prefix) = false;
-      option (gogoproto.enum_stringer) = false;
-
-      AT_MOST_ONCE = 0;
-      AT_LEAST_ONCE = 1;
-      EXACTLY_ONCE = 2;
-    }
-
-    EmbeddedEnum test_enum_value = 2;
-    EmbeddedEnum test_another_enum_value = 3;
-  }
-  
-  EmbeddedMessageDefinitionWithEnum test_message_field = 1;
 }

@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/TheThingsIndustries/protoc-gen-go-flags/annotations"
-	"github.com/TheThingsIndustries/protoc-gen-go-flags/internal/gogoproto"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -657,21 +656,12 @@ nextField:
 // readWKTValue assigns a different proto field type to a WKT value based on the plugin used.
 func (g *generator) readWKTValue(field *protogen.Field, message *protogen.Message, fieldName string) string {
 	pluginPackage := golangPluginPackage
-	if Params.Lang == "gogo" {
-		pluginPackage = gogoPluginPackage
-	}
 	switch message.Desc.FullName() {
 	case "google.protobuf.FieldMask":
 		return g.QualifiedGoIdent(pluginPackage.Ident("SetFieldMask(" + fieldName + ")"))
 	case "google.protobuf.Timestamp":
-		if Params.Lang == "gogo" && proto.HasExtension(field.Desc.Options(), gogoproto.E_Stdtime) && proto.GetExtension(field.Desc.Options(), gogoproto.E_Stdtime).(bool) {
-			return ifThenElse(fieldIsNullable(field), "&", "") + fieldName
-		}
 		return g.QualifiedGoIdent(pluginPackage.Ident("SetTimestamp(" + fieldName + ")"))
 	case "google.protobuf.Duration":
-		if Params.Lang == "gogo" && proto.HasExtension(field.Desc.Options(), gogoproto.E_Stdduration) && proto.GetExtension(field.Desc.Options(), gogoproto.E_Stdduration).(bool) {
-			return ifThenElse(fieldIsNullable(field), "&", "") + fieldName
-		}
 		return g.QualifiedGoIdent(pluginPackage.Ident("SetDuration(" + fieldName + ")"))
 	default:
 		g.gen.Error(fmt.Errorf("unsupported WKT %q", message.Desc.FullName()))

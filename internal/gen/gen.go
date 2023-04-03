@@ -25,7 +25,6 @@ const (
 	pflagPackage = protogen.GoImportPath("github.com/spf13/pflag")
 
 	flagspluginPackage  = protogen.GoImportPath("github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin")
-	gogoPluginPackage   = protogen.GoImportPath("github.com/TheThingsIndustries/protoc-gen-go-flags/gogo")
 	golangPluginPackage = protogen.GoImportPath("github.com/TheThingsIndustries/protoc-gen-go-flags/golang")
 )
 
