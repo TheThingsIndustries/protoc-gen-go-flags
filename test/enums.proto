@@ -3,9 +3,9 @@
 
 syntax = "proto3";
 
-import "annotations.proto";
-
 package thethings.flags.test;
+
+import "thethings/flags/annotations.proto";
 
 option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
@@ -17,23 +17,28 @@ enum RegularEnum {
 }
 
 enum CustomEnum {
-  option (thethings.flags.enum) = {
-    alias_map: "github.com/TheThingsIndustries/protoc-gen-go-flags/test/enum.CustomEnum_customvalue"
-  };
+  option (thethings.flags.enum) = {alias_map: "github.com/TheThingsIndustries/protoc-gen-go-flags/test/enum.CustomEnum_customvalue"};
 
   CUSTOM_UNKNOWN = 0;
-  CUSTOM_V1_0    = 1;
-  CUSTOM_V1_0_1  = 2;
+  CUSTOM_V1_0 = 1;
+  CUSTOM_V1_0_1 = 2;
 }
 
 message CustomEnumValue {
-  option (thethings.flags.message) = { select: true, set: true, wrapper: true };
+  option (thethings.flags.message) = {
+    select: true,
+    set: true,
+    wrapper: true
+  };
 
   CustomEnum value = 1;
 }
 
 message MessageWithEnums {
-  option (thethings.flags.message) = { select: true, set: true };
+  option (thethings.flags.message) = {
+    select: true,
+    set: true
+  };
 
   RegularEnum regular = 1;
   repeated RegularEnum regulars = 2;
@@ -46,7 +51,10 @@ message MessageWithEnums {
 }
 
 message MessageWithOneofEnums {
-  option (thethings.flags.message) = { select: true, set: true };
+  option (thethings.flags.message) = {
+    select: true,
+    set: true
+  };
 
   oneof value {
     RegularEnum regular = 1;

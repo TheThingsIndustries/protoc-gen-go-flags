@@ -3,41 +3,55 @@
 
 syntax = "proto3";
 
-import "annotations.proto";
-
 package thethings.flags.test;
+
+import "thethings/flags/annotations.proto";
 
 option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
 message SemanticalMessage {
-  option (thethings.flags.message) = { select: false, set: true, semantical: true };
+  option (thethings.flags.message) = {
+    select: false,
+    set: true,
+    semantical: true
+  };
 
   message Empty {
-    option (thethings.flags.message) = { select: false, set: true};
+    option (thethings.flags.message) = {
+      select: false,
+      set: true
+    };
   }
 
   message NonEmpty {
-    option (thethings.flags.message) = { select: false, set: true};
-    
+    option (thethings.flags.message) = {
+      select: false,
+      set: true
+    };
+
     bool bool_value = 1;
   }
 
   Empty empty = 1;
 
-  Empty empty_overruled = 2 [
-    (thethings.flags.field) = { semantical: false }
-  ];
+  Empty empty_overruled = 2 [(thethings.flags.field) = {semantical: false}];
 
   NonEmpty non_empty = 3;
 }
 
 message SemanticalOneOfMessage {
-  option (thethings.flags.message) = { select: false, set: true, semantical: true };
-  message Empty {
-  }
+  option (thethings.flags.message) = {
+    select: false,
+    set: true,
+    semantical: true
+  };
+  message Empty {}
 
   message NonEmpty {
-    option (thethings.flags.message) = { select: false, set: true };
+    option (thethings.flags.message) = {
+      select: false,
+      set: true
+    };
     bool bool_value = 1;
   }
 
@@ -46,4 +60,3 @@ message SemanticalOneOfMessage {
     NonEmpty alternative = 2;
   }
 }
-
