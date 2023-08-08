@@ -5,9 +5,9 @@ syntax = "proto2";
 
 package thethings.flags;
 
-option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/annotations";
-
 import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/annotations";
 
 // NOTE: protoc-gen-go-flags is primarily intended for internal use by
 // The Things Industries. We have therefore chosen to use option number 51886,
@@ -15,9 +15,7 @@ import "google/protobuf/descriptor.proto";
 // organizations. For this reason, the option number is not registered on
 // https://github.com/protocolbuffers/protobuf/blob/master/docs/options.md.
 
-message FileOptions {
-
-}
+message FileOptions {}
 
 extend google.protobuf.FileOptions {
   optional FileOptions file = 51886;
@@ -59,9 +57,7 @@ extend google.protobuf.FieldOptions {
   optional FieldOptions field = 51886;
 }
 
-message OneofOptions {
-
-}
+message OneofOptions {}
 
 extend google.protobuf.OneofOptions {
   optional OneofOptions oneof = 51886;
@@ -78,25 +74,19 @@ extend google.protobuf.EnumOptions {
   optional EnumOptions enum = 51886;
 }
 
-message EnumValueOptions {
-
-}
+message EnumValueOptions {}
 
 extend google.protobuf.EnumValueOptions {
   optional EnumValueOptions enum_value = 51886;
 }
 
-message ServiceOptions {
-
-}
+message ServiceOptions {}
 
 extend google.protobuf.ServiceOptions {
   optional ServiceOptions service = 51886;
 }
 
-message MethodOptions {
-
-}
+message MethodOptions {}
 
 extend google.protobuf.MethodOptions {
   optional MethodOptions method = 51886;

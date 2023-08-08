@@ -11,15 +11,11 @@ clean:
 	rm -f ./annotations/*.pb.go
 	rm -f ./test/*/*.pb.go
 
-.dev/protoc-gen-go-flags/annotations.proto: annotations.proto
-	mkdir -p $(shell dirname $@)
-	cp $< $@
+.bin/protoc-gen-go: go.mod
+	GOBIN=$(PWD)/.bin go install google.golang.org/protobuf/cmd/protoc-gen-go
 
-annotations/annotations.pb.go: .dev/protoc-gen-go-flags/annotations.proto .dev/golangproto/bin/protoc .dev/golangproto/bin/protoc-gen-go
-	PATH="$$PWD/.bin:$$PWD/.dev/golangproto/bin:$$PATH" protoc -I .dev --go_opt=module=github.com/TheThingsIndustries/protoc-gen-go-flags --go_out=./ $<
-
-internal/flagsplugin/annotations.pb.go: internal/flagsplugin/annotations.proto
-	protoc -I . --go_opt=paths=source_relative --go_out=./ ./internal/flagsplugin/annotations.proto
+annotations/annotations.pb.go: api/thethings/flags/annotations.proto .bin/protoc-gen-go
+	buf generate api
 
 BINARY_DEPS = annotations/annotations.pb.go $(wildcard cmd/protoc-gen-go-flags/*.go) $(wildcard internal/gen/*.go)
 
@@ -43,31 +39,12 @@ build: .bin/protoc-gen-go-flags .bin/protoc-gen-go-flags-linux-amd64 .bin/protoc
 .PHONY: watch
 
 watch:
-	ls annotations.proto cmd/protoc-gen-go-flags/*.go internal/gen/*.go test/*.proto | entr make build test
-
-OS :=
-ifeq ($(shell uname),Linux)
-	OS = linux
-endif
-ifeq ($(shell uname),Darwin)
-	OS = osx
-endif
-
-.dev/golangproto/bin/protoc:
-	mkdir -p .dev/golangproto/bin
-	curl -sSL -o .dev/golangproto/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.20.1/protoc-3.20.1-$(OS)-x86_64.zip
-	unzip -o .dev/golangproto/protoc.zip -d .dev/golangproto/
-
-.dev/golangproto/bin/protoc-gen-go:
-	go build -o $@ google.golang.org/protobuf/cmd/protoc-gen-go
+	ls api/thethings/flags/annotations.proto cmd/protoc-gen-go-flags/*.go internal/gen/*.go test/*.proto | entr make build test
 
 .PHONY: testprotos
 
-testprotos: build .dev/golangproto/bin/protoc .dev/golangproto/bin/protoc-gen-go
-	PATH="$$PWD/.bin:$$PWD/.dev/golangproto/bin:$$PATH" protoc -I ./test -I . \
-	  --go_opt=paths=source_relative --go_out=./test/golang \
-	  --go-flags_opt=paths=source_relative --go-flags_out=./test/golang \
-	  ./test/*.proto
+testprotos: build .bin/protoc-gen-go
+	buf generate --template buf.gen.test.yaml test
 
 .PHONY: test
 
