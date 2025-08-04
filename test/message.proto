@@ -11,21 +11,21 @@ option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
 message SemanticalMessage {
   option (thethings.flags.message) = {
-    select: false,
-    set: true,
+    select: false
+    set: true
     semantical: true
   };
 
   message Empty {
     option (thethings.flags.message) = {
-      select: false,
+      select: false
       set: true
     };
   }
 
   message NonEmpty {
     option (thethings.flags.message) = {
-      select: false,
+      select: false
       set: true
     };
 
@@ -41,15 +41,15 @@ message SemanticalMessage {
 
 message SemanticalOneOfMessage {
   option (thethings.flags.message) = {
-    select: false,
-    set: true,
+    select: false
+    set: true
     semantical: true
   };
   message Empty {}
 
   message NonEmpty {
     option (thethings.flags.message) = {
-      select: false,
+      select: false
       set: true
     };
     bool bool_value = 1;

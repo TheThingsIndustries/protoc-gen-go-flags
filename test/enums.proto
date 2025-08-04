@@ -26,8 +26,8 @@ enum CustomEnum {
 
 message CustomEnumValue {
   option (thethings.flags.message) = {
-    select: true,
-    set: true,
+    select: true
+    set: true
     wrapper: true
   };
 
@@ -36,7 +36,7 @@ message CustomEnumValue {
 
 message MessageWithEnums {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
@@ -52,7 +52,7 @@ message MessageWithEnums {
 
 message MessageWithOneofEnums {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
