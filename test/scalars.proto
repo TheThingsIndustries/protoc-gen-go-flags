@@ -11,7 +11,7 @@ option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
 message MessageWithScalars {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
@@ -61,18 +61,18 @@ message MessageWithScalars {
   repeated bytes bytes_values = 30;
 
   bytes hex_bytes_value = 31 [(thethings.flags.field) = {
-    set_flag_new_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.NewHexBytesFlag",
+    set_flag_new_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.NewHexBytesFlag"
     set_flag_getter_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.GetBytes"
   }];
   repeated bytes hex_bytes_values = 32 [(thethings.flags.field) = {
-    set_flag_new_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.NewHexBytesSliceFlag",
+    set_flag_new_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.NewHexBytesSliceFlag"
     set_flag_getter_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.GetBytesSlice"
   }];
 }
 
 message MessageWithOneofScalars {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
@@ -93,7 +93,7 @@ message MessageWithOneofScalars {
     string string_value = 14;
     bytes bytes_value = 15;
     bytes hex_bytes_value = 16 [(thethings.flags.field) = {
-      set_flag_new_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.NewHexBytesFlag",
+      set_flag_new_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.NewHexBytesFlag"
       set_flag_getter_func: "github.com/TheThingsIndustries/protoc-gen-go-flags/flagsplugin.GetBytes"
     }];
   }
@@ -101,7 +101,7 @@ message MessageWithOneofScalars {
 
 message MessageWithScalarMaps {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 

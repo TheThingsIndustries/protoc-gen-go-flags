@@ -18,7 +18,7 @@ option go_package = "github.com/TheThingsIndustries/protoc-gen-go-flags/test";
 
 message MessageWithWKTs {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
@@ -76,7 +76,7 @@ message MessageWithWKTs {
 
 message MessageWithOneofWKTs {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
@@ -103,7 +103,7 @@ message MessageWithOneofWKTs {
 
 message MessageWithWKTMaps {
   option (thethings.flags.message) = {
-    select: true,
+    select: true
     set: true
   };
 
